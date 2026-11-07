@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPv4 Subnet Intelligence Platform - Steel & Saffron Edition</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        steelDark: '#2A2F35',
+                        steelMid: '#5B6770',
+                        steelLight: '#9AA5B1',
+                        saffron: '#F2C14E',
+                        creamPale: '#FFF4D6',
+                        
+                        nbDark: '#2A2F35',
+                        nbCardDark: '#3A444C',
+                        nbBorderDark: '#5B6770',
+                        nbPrimary: '#2A2F35',
+                        nbSecondary: '#F2C14E',
+                        nbAccent: '#F2C14E',
+                        nbCodeBg: '#1E2328'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        /* TEMA ESCURO (Steel & Saffron) */
+        body.dark {
+            background-color: #2A2F35 !important;
+            color: #FFF4D6 !important;
+        }
+
+        /* TEMA CLARO - Creme e Cinza Aço com Alto Contraste */
+        body.light-theme {
+            background-color: #FFF4D6 !important;
+            color: #1A1F24 !important;
+        }
+
+        body.light-theme .bg-nbDark,
+        body.light-theme .bg-nbCardDark {
+            background-color: #F8F1DA !important;
+            border-color: #5B6770 !important;
+            box-shadow: 0 4px 6px -1px rgba(42, 47, 53, 0.08);
+        }
+
+        body.light-theme h1, 
+        body.light-theme h2, 
+        body.light-theme h3 {
+            color: #1A1F24 !important;
+        }
+
+        body.light-theme p, 
+        body.light-theme td, 
+        body.light-theme th,
+        body.light-theme li {
+            color: #2A2F35 !important;
+        }
+
+        body.light-theme .text-gray-300,
+        body.light-theme .text-gray-400 {
+            color: #3A444C !important;
+        }
+
+        body.light-theme .text-nbSecondary,
+        body.light-theme .text-nbAccent,
+        body.light-theme .text-saffron {
+            color: #A36A00 !important;
+            font-weight: 800;
+        }
+
+        body.light-theme .text-emerald-400,
+        body.light-theme .text-emerald-300 {
+            color: #15803D !important;
+            font-weight: 800;
+        }
+
+        body.light-theme .text-sky-400,
+        body.light-theme .text-sky-300 {
+            color: #1D4ED8 !important;
+            font-weight: 800;
+        }
+
+        body.light-theme .text-amber-400,
+        body.light-theme .text-amber-300 {
+            color: #C2410C !important;
+            font-weight: 800;
+        }
+
+        body.light-theme .text-white {
+            color: #1A1F24 !important;
+        }
+
+        /* Inputs e selects em tema claro */
+        body.light-theme input,
+        body.light-theme select {
+            background-color: #FFFFFF !important;
+            color: #1A1F24 !important;
+            border: 2px solid #5B6770 !important;
+            font-weight: 700 !important;
+        }
+
+        body.light-theme input:focus,
+        body.light-theme select:focus {
+            border-color: #F2C14E !important;
+            background-color: #FFFFFF !important;
+        }
+
+        /* Caixas de código e contêineres de resultados */
+        body.light-theme .bg-nbCodeBg {
+            background-color: #EDE4C7 !important;
+            border: 1px solid #5B6770 !important;
+        }
+
+        /* BARRA DE TÍTULO / HEADER NO TEMA CLARO */
+        body.light-theme header {
+            background-color: #2A2F35 !important;
+            border-bottom: 2px solid #5B6770 !important;
+        }
+
+        body.light-theme header h1 {
+            color: #FFF4D6 !important;
+        }
+
+        body.light-theme code,
+        body.light-theme pre {
+            color: #1A1F24 !important;
+            font-weight: 700;
+        }
+
+        body.light-theme .border-gray-800,
+        body.light-theme .border-gray-700 {
+            border-color: #5B6770 !important;
+        }
+
+        .header-btn {
+            background-color: #F2C14E;
+            color: #2A2F35;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .header-btn:hover {
+            background-color: #E0B03B;
+            transform: translateY(-1px);
+        }
+
+        /* CONFIGURAÇÕES DE IMPRESSÃO EXATA EM PDF */
+        @media print {
+            header, .no-print, button {
+                display: none !important;
+            }
+            body {
+                background-color: #FFFFFF !important;
+                color: #000000 !important;
+                padding: 0 !important;
+            }
+            .bg-nbDark, .bg-nbCodeBg {
+                background-color: #F9FAFB !important;
+                border: 1px solid #D1D5DB !important;
+                box-shadow: none !important;
+                color: #000000 !important;
+            }
+            .text-saffron, .text-sky-400, .text-emerald-400, .text-amber-400 {
+                color: #111827 !important;
+                font-weight: bold !important;
+            }
+            main {
+                max-width: 100% !important;
+                padding: 0 !important;
+            }
+        }
+    </style>
+    <script>
+        // Funções da Calculadora e manipulação do DOM
+        function toggleTheme() {
+            const html = document.documentElement;
+            const body = document.body;
+            const themeLabel = document.getElementById('themeLabel');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                body.classList.remove('dark');
+                body.classList.add('light-theme');
+                if (themeLabel) themeLabel.innerText = '🌙 Modo Escuro';
+            } else {
+                html.classList.add('dark');
+                body.classList.add('dark');
+                body.classList.remove('light-theme');
+                if (themeLabel) themeLabel.innerText = '☀️ Modo Claro';
+            }
+        }
+
+        function ipToLong(ip) {
+            return ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0) >>> 0;
+        }
+
+        function longToIp(long) {
+            return [
+                (long >>> 24) & 255,
+                (long >>> 16) & 255,
+                (long >>> 8) & 255,
+                long & 255
+            ].join('.');
+        }
+
+        function toBinaryString(ip) {
+            return ip.split('.').map(octet => {
+                let bin = parseInt(octet, 10).toString(2);
+                return '0'.repeat(8 - bin.length) + bin;
+            }).join('.');
+        }
+
+        function isValidIp(ip) {
+            const parts = ip.split('.');
+            if (parts.length !== 4) return false;
+            return parts.every(p => {
+                const n = Number(p);
+                return !isNaN(n) && n >= 0 && n <= 255 && p === n.toString();
+            });
+        }
+
+        // Função de Limpar / Resetar dados
+        function resetCalculator() {
+            const ipInputEl = document.getElementById('ipInput');
+            const cidrSelectEl = document.getElementById('cidrSelect');
+            const errorMsgEl = document.getElementById('errorMsg');
+
+            if (ipInputEl) ipInputEl.value = '192.168.1.50';
+            if (cidrSelectEl) cidrSelectEl.value = '24';
+            if (errorMsgEl) errorMsgEl.classList.add('hidden');
+
+            calculateSubnet();
+        }
+
+        // Função de Impressão Exata para PDF
+        function exportToPDF() {
+            window.print();
+        }
+
+        // Função de Copiar Relatório
+        function copySummary() {
+            const ip = document.getElementById('ipInput').value;
+            const mask = document.getElementById('resMask').innerText;
+            const net = document.getElementById('resNet').innerText;
+            const broadcast = document.getElementById('resBroadcast').innerText;
+            const range = document.getElementById('resRange').innerText;
+            const usable = document.getElementById('resUsable').innerText;
+
+            const textToCopy = `=== RELATÓRIO DE SUB-REDE IPv4 ===\nIP: ${ip}\nMáscara: ${mask}\nID da Rede: ${net}\nBroadcast: ${broadcast}\nFaixa Útil: ${range}\nHosts Úteis: ${usable}\n=================================`;
+
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = textToCopy;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            const copyBtn = document.getElementById('copyBtnLabel');
+            if (copyBtn) {
+                const originalText = copyBtn.innerText;
+                copyBtn.innerText = '✅ Copiado!';
+                setTimeout(() => { copyBtn.innerText = originalText; }, 2000);
+            }
+        }
+
+        function calculateSubnet() {
+            const ipInputEl = document.getElementById('ipInput');
+            const cidrSelectEl = document.getElementById('cidrSelect');
+            const errorMsgEl = document.getElementById('errorMsg');
+
+            if (!ipInputEl || !cidrSelectEl) return;
+
+            const ipInput = ipInputEl.value.trim();
+            const cidrSelect = cidrSelectEl.value;
+
+            if (!isValidIp(ipInput)) {
+                if (errorMsgEl) errorMsgEl.classList.remove('hidden');
+                return;
+            }
+            if (errorMsgEl) errorMsgEl.classList.add('hidden');
+
+            const cidr = parseInt(cidrSelect, 10);
+            const hostBits = 32 - cidr;
+            const totalHosts = Math.pow(2, hostBits);
+            const usableHosts = cidr >= 31 ? (cidr === 31 ? 2 : 1) : Math.max(0, totalHosts - 2);
+
+            const maskLong = cidr === 0 ? 0 : (~0 << hostBits) >>> 0;
+            const maskIp = longToIp(maskLong);
+
+            const ipLong = ipToLong(ipInput);
+            const netLong = (ipLong & maskLong) >>> 0;
+            const broadcastLong = (netLong | (~maskLong >>> 0)) >>> 0;
+
+            const netIp = longToIp(netLong);
+            const broadcastIp = longToIp(broadcastLong);
+
+            let firstHost = cidr >= 31 ? netIp : longToIp(netLong + 1);
+            let lastHost = cidr >= 31 ? broadcastIp : longToIp(broadcastLong - 1);
+            if (usableHosts === 0) {
+                firstHost = "N/A";
+                lastHost = "N/A";
+            }
+
+            // Helper seguro para atualizar innerText sem lançar exceções de null
+            const setText = (id, text) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = text;
+            };
+
+            // Cálculo da Máscara Wildcard (Invertida para ACLs / Cisco / OSPF)
+            const wildcardLong = (~maskLong >>> 0);
+            const wildcardIp = longToIp(wildcardLong);
+
+            // Diagnóstico de Tipo de Endereço (Audit)
+            let ipTypeStr = "Público (Roteável na Internet)";
+            let ipTypeBadge = "bg-blue-900/60 text-blue-300 border-blue-700";
+
+            if (ipInput.startsWith('10.') || 
+               (ipInput.startsWith('172.') && parseInt(ipInput.split('.')[1], 10) >= 16 && parseInt(ipInput.split('.')[1], 10) <= 31) ||
+               ipInput.startsWith('192.168.')) {
+                ipTypeStr = "Privado (RFC 1918 - Não Roteável na WAN)";
+                ipTypeBadge = "bg-emerald-950/80 text-emerald-300 border-emerald-700";
+            } else if (ipInput.startsWith('127.')) {
+                ipTypeStr = "Loopback (Diagnóstico Interno)";
+                ipTypeBadge = "bg-amber-950/80 text-amber-300 border-amber-700";
+            } else if (ipInput.startsWith('169.254.')) {
+                ipTypeStr = "APIPA / Link-Local (Autoconfiguração sem DHCP)";
+                ipTypeBadge = "bg-amber-950/80 text-amber-300 border-amber-700";
+            } else if (parseInt(ipInput.split('.')[0], 10) >= 224 && parseInt(ipInput.split('.')[0], 10) <= 239) {
+                ipTypeStr = "Multicast (Classe D)";
+                ipTypeBadge = "bg-purple-950/80 text-purple-300 border-purple-700";
+            }
+
+            const auditBadgeEl = document.getElementById('auditIpBadge');
+            if (auditBadgeEl) {
+                auditBadgeEl.className = `px-3 py-1 rounded-full text-xs font-bold border ${ipTypeBadge}`;
+                auditBadgeEl.innerText = ipTypeStr;
+            }
+
+            // Atualiza Cards principais
+            setText('resMask', maskIp);
+            setText('resWildcard', wildcardIp);
+            setText('resNet', netIp);
+            setText('resBroadcast', broadcastIp);
+            setText('resRange', `${firstHost} - ${lastHost}`);
+            setText('resTotal', totalHosts.toLocaleString());
+            setText('resUsable', usableHosts.toLocaleString());
+
+            // Visualização Binária
+            setText('binIp', toBinaryString(ipInput));
+            setText('binMask', toBinaryString(maskIp));
+            setText('binNet', toBinaryString(netIp));
+
+            // Atualiza Fluxo Lógico Reativo
+            setText('flowIp', ipInput);
+            setText('flowCidr', '/' + cidr);
+            setText('flowHostBits', `${hostBits} bits (32 - ${cidr})`);
+            setText('flowBitwiseOp', `${ipInput} AND ${maskIp} = ${netIp}`);
+            
+            const octets = maskIp.split('.').map(Number);
+            const blockSize = cidr >= 24 ? (256 - octets[3]) : totalHosts;
+            setText('flowBlockSize', `${blockSize} IPs (${totalHosts} total)`);
+            setText('flowUsableCalc', `${usableHosts} hosts (${totalHosts} - 2)`);
+
+            // Atualiza Exemplo de VLSM Reativo
+            setText('vlsmBaseIp', netIp);
+            generateSubnetTable(netLong, cidr);
+        }
+
+        function generateSubnetTable(baseNetLong, cidr) {
+            const tbody = document.getElementById('subnetTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const subCidr = Math.min(30, cidr + 2);
+            const hostBits = 32 - subCidr;
+            const subSize = Math.pow(2, hostBits);
+            const numSubnets = 4;
+
+            for (let i = 0; i < numSubnets; i++) {
+                const currentNet = (baseNetLong + (i * subSize)) >>> 0;
+                const currentBcast = (currentNet + subSize - 1) >>> 0;
+                const firstIp = longToIp(currentNet + 1);
+                const lastIp = longToIp(currentBcast - 1);
+
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-700 hover:bg-steelMid/10';
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-saffron">Sub-rede ${i + 1} (${subCidr})</td>
+                    <td class="p-3 font-mono">${longToIp(currentNet)}</td>
+                    <td class="p-3 font-mono text-emerald-400">${firstIp}</td>
+                    <td class="p-3 font-mono text-emerald-400">${lastIp}</td>
+                    <td class="p-3 font-mono text-amber-400">${longToIp(currentBcast)}</td>
+                    <td class="p-3 font-bold">${subSize - 2}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        function initCidrSelect() {
+            const select = document.getElementById('cidrSelect');
+            if (!select) return;
+            select.innerHTML = '';
+            for (let i = 8; i <= 32; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = `/${i} (${longToIp((~0 << (32 - i)) >>> 0)})`;
+                if (i === 24) opt.selected = true;
+                select.appendChild(opt);
+            }
+        }
+
+        window.onload = function() {
+            initCidrSelect();
+            calculateSubnet();
+            
+            const ipInputEl = document.getElementById('ipInput');
+            const cidrSelectEl = document.getElementById('cidrSelect');
+            
+            if (ipInputEl) {
+                ipInputEl.addEventListener('input', calculateSubnet);
+                // Permite pressionar ENTER no campo de IP para acionar o cálculo
+                ipInputEl.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        calculateSubnet();
+                        ipInputEl.blur(); // Remove o foco visual após confirmar
+                    }
+                });
+            }
+
+            if (cidrSelectEl) {
+                cidrSelectEl.addEventListener('change', calculateSubnet);
+                // Permite pressionar ENTER na seleção de máscara CIDR
+                cidrSelectEl.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        calculateSubnet();
+                        cidrSelectEl.blur();
+                    }
+                });
+            }
+
+            // Atalho global de teclado: ENTER recarrega/confirma o cálculo em qualquer lugar da página
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && event.target.tagName !== 'SUMMARY' && event.target.tagName !== 'BUTTON') {
+                    calculateSubnet();
+                }
+            });
+        };
+    </script>
+</head>
+<body class="dark min-h-screen pb-16">
+
+    <!-- CABEÇALHO DA PLATAFORMA -->
+    <header class="bg-steelDark border-b border-steelMid sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <span class="bg-saffron text-steelDark font-black px-3 py-1 rounded text-sm tracking-wider uppercase shadow-sm">IPv4</span>
+                <h1 class="text-xl font-bold tracking-tight text-creamPale drop-shadow-sm">IPv4 Subnet Intelligence Platform</h1>
+            </div>
+            <div class="flex items-center space-x-2 no-print">
+                <button onclick="exportToPDF()" class="header-btn px-3 py-2 rounded-lg text-xs md:text-sm shadow flex items-center gap-1.5" title="Exportar impressão / salvar em PDF">
+                    📄 <span>PDF / Imprimir</span>
+                </button>
+                <button onclick="toggleTheme()" class="header-btn px-3 py-2 rounded-lg text-xs md:text-sm shadow flex items-center gap-1.5">
+                    <span id="themeLabel">☀️ Modo Claro</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-4 pt-8 space-y-10">
+
+        <!-- INTRODUÇÃO DIDÁTICA E TÉCNICA -->
+        <section class="bg-nbDark p-6 rounded-xl border border-steelMid shadow-sm space-y-4">
+            <h2 class="text-2xl font-bold text-saffron flex items-center gap-2">
+                📌 Arquitetura e Engenharia de Sub-redes IPv4
+            </h2>
+            <p class="text-base leading-relaxed">
+                O <strong>Subnetting (Sub-roteamento)</strong> é o processo de divisão lógica de uma rede IP física em múltiplas redes menores. Esta prática maximiza a eficiência do roteamento, reduz domínios de <i>broadcast</i>, otimiza o desempenho dos comutadores (switches) e fortalece políticas de segurança por segmentação de firewall.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <h3 class="font-bold text-saffron mb-1">Total de Bits</h3>
+                    <p class="text-sm">Um endereço IPv4 é formado por <strong>32 bits</strong> organizados em 4 octetos binários de 8 bits cada.</p>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <h3 class="font-bold text-sky-400 mb-1">Network ID vs Host ID</h3>
+                    <p class="text-sm">A máscara especifica os bits de roteamento (Rede) e os bits para endereçamento local (Hosts).</p>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <h3 class="font-bold text-emerald-400 mb-1">Notação CIDR</h3>
+                    <p class="text-sm">O prefixo CIDR (ex: <code>/24</code>) define graficamente a quantidade contínua de bits `1` na máscara.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CALCULADORA DE SUB-REDES INTERATIVA -->
+        <section class="bg-nbDark p-6 rounded-xl border border-steelMid shadow-md space-y-6">
+            <div class="border-b border-steelMid pb-4 flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-saffron">⚡ Calculadora Inteligente de Sub-redes</h2>
+                    <p class="text-sm text-gray-400">Insira um IP e selecione a máscara para atualizar instantaneamente todos os cálculos e seções da página.</p>
+                </div>
+                <div class="flex items-center gap-2 no-print">
+                    <button onclick="copySummary()" class="px-3 py-1.5 rounded bg-steelMid/40 hover:bg-steelMid/60 text-xs font-bold transition flex items-center gap-1 border border-steelMid">
+                        📋 <span id="copyBtnLabel">Copiar Resumo</span>
+                    </button>
+                    <button onclick="resetCalculator()" class="px-3 py-1.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold transition flex items-center gap-1 border border-red-800">
+                        🔄 <span>Restaurar Padrão</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Endereço IP (IPv4):</label>
+                    <input type="text" id="ipInput" value="192.168.1.50" class="w-full p-3 rounded-lg bg-nbCodeBg border border-steelMid focus:outline-none focus:ring-2 focus:ring-saffron font-mono text-base" placeholder="Ex: 192.168.1.1">
+                    <p id="errorMsg" class="text-red-400 text-xs mt-1 hidden font-bold">Endereço IP inválido. Use a sintaxe 0.0.0.0 a 255.255.255.255.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Máscara de Rede (CIDR):</label>
+                    <select id="cidrSelect" class="w-full p-3 rounded-lg bg-nbCodeBg border border-steelMid focus:outline-none focus:ring-2 focus:ring-saffron font-mono text-base">
+                        <!-- Preenchido via JavaScript -->
+                    </select>
+                </div>
+                <div class="flex items-end gap-2">
+                    <button onclick="calculateSubnet()" class="w-full py-3 px-6 rounded-lg bg-saffron text-steelDark font-bold hover:bg-yellow-500 transition shadow">
+                        Recalcular
+                    </button>
+                </div>
+            </div>
+
+            <!-- RESULTADOS EM CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="text-xs text-gray-400 uppercase font-bold">Máscara Decimal</span>
+                    <div id="resMask" class="text-lg font-mono font-bold text-saffron">255.255.255.0</div>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="text-xs text-gray-400 uppercase font-bold">Máscara Coringa (Wildcard / ACL)</span>
+                    <div id="resWildcard" class="text-lg font-mono font-bold text-amber-400">0.0.0.255</div>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="text-xs text-gray-400 uppercase font-bold">ID da Rede (Network)</span>
+                    <div id="resNet" class="text-lg font-mono font-bold text-sky-400">192.168.1.0</div>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="text-xs text-gray-400 uppercase font-bold">Endereço de Broadcast</span>
+                    <div id="resBroadcast" class="text-lg font-mono font-bold text-amber-400">192.168.1.255</div>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid sm:col-span-2">
+                    <span class="text-xs text-gray-400 uppercase font-bold">Faixa de IPs Úteis</span>
+                    <div id="resRange" class="text-sm font-mono font-bold text-emerald-400">192.168.1.1 - 192.168.1.254</div>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="text-xs text-gray-400 uppercase font-bold">Total de Endereços</span>
+                    <div id="resTotal" class="text-lg font-mono font-bold">256</div>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="text-xs text-gray-400 uppercase font-bold">Hosts Úteis</span>
+                    <div id="resUsable" class="text-lg font-mono font-bold text-emerald-400">254</div>
+                </div>
+            </div>
+
+            <!-- PAINEL DE AUDITORIA E CLASSIFICAÇÃO INTELIGENTE -->
+            <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid flex flex-wrap justify-between items-center gap-3">
+                <span class="text-xs font-bold text-gray-300 uppercase">Diagnóstico de Tipo e Segurança de Escopo IP:</span>
+                <span id="auditIpBadge" class="px-3 py-1 rounded-full text-xs font-bold border bg-emerald-950/80 text-emerald-300 border-emerald-700">
+                    Privado (RFC 1918 - Não Roteável na WAN)
+                </span>
+            </div>
+
+            <!-- REPRESENTAÇÃO BINÁRIA -->
+            <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                <h3 class="text-sm font-bold text-saffron uppercase tracking-wider">Decomposição Binária dos Octetos</h3>
+                <div class="font-mono text-xs space-y-1 overflow-x-auto">
+                    <div class="flex justify-between min-w-[500px]">
+                        <span class="w-24 text-gray-400">IP (Decimal):</span>
+                        <span id="binIp" class="text-saffron">11000000.10101000.00000001.00110010</span>
+                    </div>
+                    <div class="flex justify-between min-w-[500px]">
+                        <span class="w-24 text-gray-400">Máscara:</span>
+                        <span id="binMask" class="text-sky-400">11111111.11111111.11111111.00000000</span>
+                    </div>
+                    <div class="flex justify-between min-w-[500px]">
+                        <span class="w-24 text-gray-400">Rede (AND):</span>
+                        <span id="binNet" class="text-emerald-400">11000000.10101000.00000001.00000000</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVO: ENDEREÇAMENTO HISTÓRICO POR CLASSES (CLASSES A A E & RFC 1918) -->
+        <section class="bg-nbDark p-6 rounded-xl border border-steelMid shadow-sm space-y-6">
+            <h2 class="text-2xl font-bold text-saffron flex items-center gap-2">
+                🏛️ Endereçamento Histórico por Classes (Classful A - E)
+            </h2>
+            <p class="text-sm text-gray-300 leading-relaxed">
+                Antes do modelo CIDR (1993), a Internet utilizava arquitetura rígida baseada no primeiro octeto do IP. Compreender este modelo é fundamental para exames de certificação e análise histórica de roteamento.
+            </p>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-nbCodeBg border-b border-steelMid font-bold text-creamPale">
+                            <th class="p-3">Classe</th>
+                            <th class="p-3">1º Octeto</th>
+                            <th class="p-3">Bits Iniciais</th>
+                            <th class="p-3">Rede / Host</th>
+                            <th class="p-3">Máscara Padrão</th>
+                            <th class="p-3">Nº de Redes</th>
+                            <th class="p-3">Hosts / Rede</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-steelMid/40 font-mono text-xs">
+                        <tr>
+                            <td class="p-3 font-bold text-saffron">Classe A</td>
+                            <td class="p-3">1 - 126</td>
+                            <td class="p-3 text-sky-400 font-bold">0...</td>
+                            <td class="p-3">Rede.Host.Host.Host</td>
+                            <td class="p-3">255.0.0.0 (/8)</td>
+                            <td class="p-3">126</td>
+                            <td class="p-3 text-emerald-400 font-bold">~16,7 milhões</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-saffron">Classe B</td>
+                            <td class="p-3">128 - 191</td>
+                            <td class="p-3 text-sky-400 font-bold">10...</td>
+                            <td class="p-3">Rede.Rede.Host.Host</td>
+                            <td class="p-3">255.255.0.0 (/16)</td>
+                            <td class="p-3">16.384</td>
+                            <td class="p-3 text-emerald-400 font-bold">65.534</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-saffron">Classe C</td>
+                            <td class="p-3">192 - 223</td>
+                            <td class="p-3 text-sky-400 font-bold">110...</td>
+                            <td class="p-3">Rede.Rede.Rede.Host</td>
+                            <td class="p-3">255.255.255.0 (/24)</td>
+                            <td class="p-3">~2 milhões</td>
+                            <td class="p-3 text-emerald-400 font-bold">254</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-amber-400">Classe D</td>
+                            <td class="p-3">224 - 239</td>
+                            <td class="p-3 text-amber-400 font-bold">1110...</td>
+                            <td class="p-3 font-sans italic" colspan="4">Reservado para comunicação Multicast</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-red-400">Classe E</td>
+                            <td class="p-3">240 - 255</td>
+                            <td class="p-3 text-red-400 font-bold">1111...</td>
+                            <td class="p-3 font-sans italic" colspan="4">Experimental e pesquisas futuras</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- FAIXAS PRIVADAS E RESERVADAS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <h3 class="font-bold text-saffron text-sm flex items-center gap-1.5">🔒 Faixas Privadas (RFC 1918)</h3>
+                    <ul class="text-xs space-y-1 font-mono">
+                        <li>• <strong class="text-sky-400">Classe A:</strong> 10.0.0.0 até 10.255.255.255 (/8)</li>
+                        <li>• <strong class="text-sky-400">Classe B:</strong> 172.16.0.0 até 172.31.255.255 (/12)</li>
+                        <li>• <strong class="text-sky-400">Classe C:</strong> 192.168.0.0 até 192.168.255.255 (/16)</li>
+                    </ul>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <h3 class="font-bold text-saffron text-sm flex items-center gap-1.5">⚠️ Endereços Reservados Especiais</h3>
+                    <ul class="text-xs space-y-1 font-mono">
+                        <li>• <strong class="text-amber-400">127.0.0.1 (127.0.0.0/8):</strong> Loopback de diagnóstico interno</li>
+                        <li>• <strong class="text-amber-400">0.0.0.0/0:</strong> Rota padrão / qualquer rede</li>
+                        <li>• <strong class="text-amber-400">255.255.255.255:</strong> Broadcast limitado na rede local</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- FLUXO LÓGICO DE RESOLUÇÃO REATIVO -->
+        <section class="bg-nbDark p-6 rounded-xl border border-steelMid shadow-sm space-y-6">
+            <h2 class="text-2xl font-bold text-saffron">🧠 Fluxo Lógico e Método do "Número Mágico"</h2>
+            <p class="text-sm text-gray-300">Este diagrama sintetiza os cálculos rápidos de cabeça através do <strong>Número Mágico</strong> ($2^{32-\text{prefixo}}$ ou $256 - \text{octeto crítico}$):</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <div class="text-saffron font-extrabold text-lg">1. Bits de Host</div>
+                    <p class="text-xs text-gray-400">Subtração dos bits CIDR do total de 32 bits IPv4.</p>
+                    <div class="bg-steelDark/50 p-2 rounded text-xs font-mono font-bold text-saffron" id="flowHostBits">8 bits (32 - 24)</div>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <div class="text-sky-400 font-extrabold text-lg">2. Bitwise AND</div>
+                    <p class="text-xs text-gray-400">Operação binária lógica entre IP e Máscara para extrair o ID da Rede.</p>
+                    <div class="bg-steelDark/50 p-2 rounded text-xs font-mono font-bold text-sky-400 truncate" id="flowBitwiseOp">192.168.1.50 AND 255.255.255.0</div>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <div class="text-amber-400 font-extrabold text-lg">3. Número Mágico (Salto)</div>
+                    <p class="text-xs text-gray-400">Tamanho do bloco calculado por 256 - octeto crítico.</p>
+                    <div class="bg-steelDark/50 p-2 rounded text-xs font-mono font-bold text-amber-400" id="flowBlockSize">256 IPs (256 total)</div>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <div class="text-emerald-400 font-extrabold text-lg">4. IPs Úteis</div>
+                    <p class="text-xs text-gray-400">Desconto dos endereços de Rede e Broadcast (2^H - 2).</p>
+                    <div class="bg-steelDark/50 p-2 rounded text-xs font-mono font-bold text-emerald-400" id="flowUsableCalc">254 hosts (256 - 2)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVO: DIMENSIONAMENTO REVERSO POR QUANTIDADE DE HOSTS -->
+        <section class="bg-nbDark p-6 rounded-xl border border-steelMid shadow-sm space-y-4">
+            <h2 class="text-2xl font-bold text-saffron flex items-center gap-2">
+                🎯 Dimensionador Reverso (Busca de Máscara por Quantidade de Hosts)
+            </h2>
+            <p class="text-sm text-gray-300">Digite quantos dispositivos precisa conectar para que a plataforma determine o menor bloco CIDR suficiente:</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-1">Número de Hosts Desejados:</label>
+                    <input type="number" id="neededHostsInput" min="1" max="16777214" placeholder="Ex: 500" class="w-full p-2.5 rounded bg-nbCodeBg border border-steelMid font-mono text-sm focus:outline-none focus:ring-1 focus:ring-saffron">
+                </div>
+                <div class="md:col-span-2 bg-nbCodeBg p-3 rounded-lg border border-steelMid flex justify-between items-center">
+                    <div>
+                        <span class="text-xs text-gray-400 block font-bold">Máscara Recomendada:</span>
+                        <span id="suggestedCidrResult" class="text-base font-mono font-bold text-saffron">Digite um valor acima...</span>
+                    </div>
+                    <button onclick="applySuggestedCidr()" id="applyCidrBtn" class="hidden px-3 py-1.5 rounded bg-saffron text-steelDark text-xs font-bold hover:bg-yellow-500 transition">
+                        Aplicar na Calculadora Principal
+                    </button>
+                </div>
+            </div>
+
+            <script>
+                document.getElementById('neededHostsInput')?.addEventListener('input', function() {
+                    const needed = parseInt(this.value, 10);
+                    const resultEl = document.getElementById('suggestedCidrResult');
+                    const applyBtn = document.getElementById('applyCidrBtn');
+                    if (isNaN(needed) || needed <= 0) {
+                        resultEl.innerText = "Digite um valor válido...";
+                        applyBtn.classList.add('hidden');
+                        return;
+                    }
+                    
+                    let h = 1;
+                    while (Math.pow(2, h) - 2 < needed) {
+                        h++;
+                    }
+                    const cidr = 32 - h;
+                    const totalIPs = Math.pow(2, h);
+                    const usableIPs = totalIPs - 2;
+                    const maskStr = longToIp((~0 << h) >>> 0);
+
+                    resultEl.innerHTML = `<span class="text-emerald-400">/${cidr}</span> (${maskStr}) — Suporta até <strong>${usableIPs.toLocaleString()}</strong> hosts úteis`;
+                    applyBtn.dataset.cidr = cidr;
+                    applyBtn.classList.remove('hidden');
+                });
+
+                function applySuggestedCidr() {
+                    const btn = document.getElementById('applyCidrBtn');
+                    if (btn && btn.dataset.cidr) {
+                        const select = document.getElementById('cidrSelect');
+                        if (select) {
+                            select.value = btn.dataset.cidr;
+                            calculateSubnet();
+                            window.scrollTo({ top: 300, behavior: 'smooth' });
+                        }
+                    }
+                }
+            </script>
+        </section>
+
+        <!-- NOVO: PASSO A PASSO SISTEMÁTICO DE SUBNETTING -->
+        <section class="bg-nbDark p-6 rounded-xl border border-steelMid shadow-sm space-y-4">
+            <h2 class="text-2xl font-bold text-saffron">📝 Metodologia de Cálculo em 6 Passos Systematicos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="font-bold text-saffron">Passo 1: Sub-redes Necessárias</span>
+                    <p class="mt-1 text-gray-300">Calcule $2^n \ge \text{sub-redes}$, onde $n$ é a quantidade de bits emprestados de host.</p>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="font-bold text-saffron">Passo 2: Dimensionar Hosts</span>
+                    <p class="mt-1 text-gray-300">Confirme se $2^h - 2 \ge \text{hosts}$, sendo $h$ os bits de host restantes.</p>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="font-bold text-saffron">Passo 3: Nova Máscara CIDR</span>
+                    <p class="mt-1 text-gray-300">Soma-se o prefixo original + $n$ bits emprestados (ex: $/24 + 3 = /27$).</p>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="font-bold text-saffron">Passo 4: Octeto Crítico e Salto</span>
+                    <p class="mt-1 text-gray-300">Identifique o octeto alterado. Salto = $256 - \text{octeto}$ ou $2^{32-\text{prefixo}}$.</p>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="font-bold text-saffron">Passo 5: Sequenciamento de Blocos</span>
+                    <p class="mt-1 text-gray-300">Crie os IDs de rede somando o salto consecutivamente ($0, \text{salto}, 2\times\text{salto}, \dots$).</p>
+                </div>
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid">
+                    <span class="font-bold text-saffron">Passo 6: Broadcast e Intervalos</span>
+                    <p class="mt-1 text-gray-300">Broadcast é $(\text{Próxima Rede} - 1)$. Os IPs utilizáveis ficam no intervalo central.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- APROFUNDAMENTO TÉCNICO: ÁLGEBRA BOOLEANA E HISTÓRICO -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-nbDark p-6 rounded-xl border border-steelMid space-y-4">
+                <h3 class="text-xl font-bold text-saffron">💻 Operação Bitwise AND no Hardware</h3>
+                <p class="text-sm leading-relaxed">
+                    Os roteadores não realizam cálculos em base decimal. Para determinar se um pacote deve ser encaminhado localmente ou para um Gateway, a interface de rede executa uma porta lógica <strong>AND</strong> bit por bit entre o IP de destino e a máscara.
+                </p>
+                <div class="bg-nbCodeBg p-3 rounded font-mono text-xs space-y-1">
+                    <div>Bit IP: 1 AND Bit Máscara: 1 = <span class="text-emerald-400 font-bold">1</span></div>
+                    <div>Bit IP: 1 AND Bit Máscara: 0 = <span class="text-red-400 font-bold">0</span></div>
+                    <div>Bit IP: 0 AND Bit Máscara: 1 = <span class="text-red-400 font-bold">0</span></div>
+                </div>
+            </div>
+
+            <div class="bg-nbDark p-6 rounded-xl border border-steelMid space-y-4">
+                <h3 class="text-xl font-bold text-saffron">📜 Do Classful (A, B, C) ao CIDR</h3>
+                <p class="text-sm leading-relaxed">
+                    Em 1993, a IETF introduziu o <strong>CIDR (Classless Inter-Domain Routing - RFC 1519)</strong>. O CIDR eliminou a rigidez de classes, permitiu agregação de rotas (Supernetting) na tabela de roteamento global do BGP e introduziu o conceito de VLSM.
+                </p>
+            </div>
+        </section>
+
+        <!-- SUB-REDES SEQUENCIAIS (VLSM / DIVISÃO DE BLOCOS) -->
+        <section class="bg-nbDark p-6 rounded-xl border border-steelMid shadow-sm space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+                <h2 class="text-2xl font-bold text-saffron">📊 Exemplo de Sub-divisão Sequencial (VLSM)</h2>
+                <span class="text-xs font-mono bg-nbCodeBg px-3 py-1 rounded border border-steelMid">IP Base: <span id="vlsmBaseIp" class="text-saffron font-bold">192.168.1.0</span></span>
+            </div>
+            <p class="text-sm text-gray-300">Abaixo é exibido como a sua sub-rede configurada pode ser dividida em 4 sub-redes filhas menores de tamanho igual:</p>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-nbCodeBg border-b border-steelMid text-gray-300 font-bold">
+                            <th class="p-3">Sub-rede</th>
+                            <th class="p-3">ID da Rede</th>
+                            <th class="p-3">Primeiro IP Útil</th>
+                            <th class="p-3">Último IP Útil</th>
+                            <th class="p-3">Broadcast</th>
+                            <th class="p-3">Hosts Úteis</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subnetTableBody">
+                        <!-- Gerado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- TABELA DE REFERÊNCIA RÁPIDA CIDR (EXPANDIDA DO PDF) -->
+        <section class="bg-nbDark p-6 rounded-xl border border-steelMid space-y-4">
+            <h2 class="text-2xl font-bold text-saffron">📑 Tabela de Referência Rápida de Prefixo e Equivalência Máscara</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-nbCodeBg border-b border-steelMid font-bold">
+                            <th class="p-3">Prefixo CIDR</th>
+                            <th class="p-3">Máscara Decimal</th>
+                            <th class="p-3">Bits Host (H)</th>
+                            <th class="p-3">Total de IPs</th>
+                            <th class="p-3">Hosts Úteis ($2^H - 2$)</th>
+                            <th class="p-3">Tamanho do Salto</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700/50 font-mono text-xs">
+                        <tr><td class="p-3 font-bold text-saffron">/8</td><td class="p-3">255.0.0.0</td><td class="p-3">24</td><td class="p-3">16.777.216</td><td class="p-3 font-bold text-emerald-400">16.777.214</td><td class="p-3">1º Octeto (256)</td></tr>
+                        <tr><td class="p-3 font-bold text-saffron">/16</td><td class="p-3">255.255.0.0</td><td class="p-3">16</td><td class="p-3">65.536</td><td class="p-3 font-bold text-emerald-400">65.534</td><td class="p-3">2º Octeto (256)</td></tr>
+                        <tr><td class="p-3 font-bold text-saffron">/24</td><td class="p-3">255.255.255.0</td><td class="p-3">8</td><td class="p-3">256</td><td class="p-3 font-bold text-emerald-400">254</td><td class="p-3">256</td></tr>
+                        <tr><td class="p-3 font-bold text-saffron">/25</td><td class="p-3">255.255.255.128</td><td class="p-3">7</td><td class="p-3">128</td><td class="p-3 font-bold text-emerald-400">126</td><td class="p-3">128</td></tr>
+                        <tr><td class="p-3 font-bold text-saffron">/26</td><td class="p-3">255.255.255.192</td><td class="p-3">6</td><td class="p-3">64</td><td class="p-3 font-bold text-emerald-400">62</td><td class="p-3">64</td></tr>
+                        <tr><td class="p-3 font-bold text-saffron">/27</td><td class="p-3">255.255.255.224</td><td class="p-3">5</td><td class="p-3">32</td><td class="p-3 font-bold text-emerald-400">30</td><td class="p-3">32</td></tr>
+                        <tr><td class="p-3 font-bold text-saffron">/28</td><td class="p-3">255.255.255.240</td><td class="p-3">4</td><td class="p-3">16</td><td class="p-3 font-bold text-emerald-400">14</td><td class="p-3">16</td></tr>
+                        <tr><td class="p-3 font-bold text-saffron">/29</td><td class="p-3">255.255.255.248</td><td class="p-3">3</td><td class="p-3">8</td><td class="p-3 font-bold text-emerald-400">6</td><td class="p-3">8</td></tr>
+                        <tr><td class="p-3 font-bold text-saffron">/30</td><td class="p-3">255.255.255.252</td><td class="p-3">2</td><td class="p-3">4</td><td class="p-3 font-bold text-emerald-400">2 (Point-to-Point WAN)</td><td class="p-3">4</td></tr>
+                        <tr><td class="p-3 font-bold text-saffron">/31</td><td class="p-3">255.255.255.254</td><td class="p-3">1</td><td class="p-3">2</td><td class="p-3 font-bold text-emerald-400">2 (RFC 3021 P2P Link)</td><td class="p-3">2</td></tr>
+                        <tr><td class="p-3 font-bold text-saffron">/32</td><td class="p-3">255.255.255.255</td><td class="p-3">0</td><td class="p-3">1</td><td class="p-3 font-bold text-sky-400">1 (Host único / Loopback)</td><td class="p-3">1</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- NOVO: EXERCÍCIOS RESOLVIDOS COM GABARITO DO PDF -->
+        <section class="bg-nbDark p-6 rounded-xl border border-steelMid shadow-sm space-y-6 no-print">
+            <h2 class="text-2xl font-bold text-saffron flex items-center gap-2">
+                ✍️ Exercícios Práticos Resolvidos (Baseados no PDF)
+            </h2>
+            <div class="space-y-4">
+
+                <!-- EXERCÍCIO 1 -->
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sky-400 text-sm">Exercício 1: Identificação de Classe</span>
+                    </div>
+                    <p class="text-xs">Identifique a classe e a máscara padrão do endereço <code>190.10.5.7</code>.</p>
+                    <details class="text-xs mt-2">
+                        <summary class="cursor-pointer font-bold text-saffron hover:underline">Ver Gabarito Comentado</summary>
+                        <div class="mt-2 p-2 bg-steelDark/60 rounded border border-steelMid text-emerald-400 font-mono">
+                            O 1º octeto (190) está no intervalo 128-191. Portanto, trata-se de um endereço da <strong>Classe B</strong> com máscara padrão /16 (255.255.0.0).
+                        </div>
+                    </details>
+                </div>
+
+                <!-- EXERCÍCIO 2 -->
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sky-400 text-sm">Exercício 2: Conversão de Prefixo</span>
+                    </div>
+                    <p class="text-xs">Converta o prefixo <code>/28</code> em máscara decimal e determine a quantidade de hosts úteis.</p>
+                    <details class="text-xs mt-2">
+                        <summary class="cursor-pointer font-bold text-saffron hover:underline">Ver Gabarito Comentado</summary>
+                        <div class="mt-2 p-2 bg-steelDark/60 rounded border border-steelMid text-emerald-400 font-mono">
+                            Máscara Decimal: <strong>255.255.255.240</strong>.<br>
+                            Bits de Host: 32 - 28 = 4 bits.<br>
+                            Hosts Úteis: 2^4 - 2 = 16 - 2 = <strong>14 hosts úteis</strong>.
+                        </div>
+                    </details>
+                </div>
+
+                <!-- EXERCÍCIO 3 -->
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sky-400 text-sm">Exercício 3: Subnetting /24 para 4 Sub-redes</span>
+                    </div>
+                    <p class="text-xs">Divida o bloco <code>192.168.50.0/24</code> em 4 sub-redes e liste as faixas.</p>
+                    <details class="text-xs mt-2">
+                        <summary class="cursor-pointer font-bold text-saffron hover:underline">Ver Gabarito Comentado</summary>
+                        <div class="mt-2 p-2 bg-steelDark/60 rounded border border-steelMid text-emerald-400 font-mono space-y-1">
+                            Para 4 sub-redes: 2^n = 4 => n = 2 bits emprestados => Novo Prefixo: /26.<br>
+                            Salto = 256 - 192 = 64.<br>
+                            • Sub-rede 1: 192.168.50.0/26 (Útil: .1 até .62, Broadcast: .63)<br>
+                            • Sub-rede 2: 192.168.50.64/26 (Útil: .65 até .126, Broadcast: .127)<br>
+                            • Sub-rede 3: 192.168.50.128/26 (Útil: .129 até .190, Broadcast: .191)<br>
+                            • Sub-rede 4: 192.168.50.192/26 (Útil: .193 até .254, Broadcast: .255)
+                        </div>
+                    </details>
+                </div>
+
+                <!-- EXERCÍCIO 4 -->
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sky-400 text-sm">Exercício 4: Identificar Rede em Octeto Intermediário</span>
+                    </div>
+                    <p class="text-xs">Qual é a rede a que pertence o IP <code>172.16.45.200/20</code>?</p>
+                    <details class="text-xs mt-2">
+                        <summary class="cursor-pointer font-bold text-saffron hover:underline">Ver Gabarito Comentado</summary>
+                        <div class="mt-2 p-2 bg-steelDark/60 rounded border border-steelMid text-emerald-400 font-mono">
+                            Máscara /20 = 255.255.240.0. Octeto Crítico: 3º (240).<br>
+                            Salto = 256 - 240 = 16 no 3º octeto (0, 16, 32, 48...).<br>
+                            O valor 45 do IP está entre 32 e 47.<br>
+                            Logo, o Endereço de Rede é: <strong>172.16.32.0</strong>.
+                        </div>
+                    </details>
+                </div>
+
+                <!-- EXERCÍCIO 5 -->
+                <div class="bg-nbCodeBg p-4 rounded-lg border border-steelMid space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sky-400 text-sm">Exercício 5: Dimensionamento por Necessidade</span>
+                    </div>
+                    <p class="text-xs">Qual o menor prefixo para acomodar 300 hosts em uma mesma sub-rede?</p>
+                    <details class="text-xs mt-2">
+                        <summary class="cursor-pointer font-bold text-saffron hover:underline">Ver Gabarito Comentado</summary>
+                        <div class="mt-2 p-2 bg-steelDark/60 rounded border border-steelMid text-emerald-400 font-mono">
+                            Fórmula: 2^h - 2 >= 300 => 2^h >= 302.<br>
+                            Para h = 8 => 256 IPs (insuficiente).<br>
+                            Para h = 9 => 512 IPs (510 úteis).<br>
+                            Prefixo = 32 - 9 = <strong>/23 (Máscara 255.255.254.0)</strong>.
+                        </div>
+                    </details>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="max-w-7xl mx-auto px-4 mt-12 pt-6 border-t border-steelMid text-center text-xs text-gray-400">
+        IPv4 Subnet Intelligence Platform — Estilo Steel & Saffron. Material didático alinhado ao guia de estudos oficial sobre Classes, CIDR e VLSM.
+    </footer>
+
+</body>
+</html>
