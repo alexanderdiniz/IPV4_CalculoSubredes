@@ -424,6 +424,7 @@
             setText('resTotal', totalHosts.toLocaleString());
             setText('resUsable', usableHosts.toLocaleString());
 
+            // Garante o formato correto exato dos octetos binários separados por ponto sem espaços extras
             setText('binIp', toBinaryString(ipInput));
             setText('binMask', toBinaryString(maskIp));
             setText('binNet', toBinaryString(netIp));
@@ -1085,25 +1086,78 @@
                 </div>
 
                 <!-- REPRESENTAÇÃO BINÁRIA -->
-                <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540] space-y-2 overflow-hidden">
-                    <h3 class="text-xs sm:text-sm font-bold text-[#f7a21b] uppercase tracking-wider">Decomposição Binária dos Octetos</h3>
-                    <div class="w-full overflow-x-auto pb-2 -mx-1 px-1">
-                        <div class="font-mono text-[11px] sm:text-xs space-y-2 min-w-[580px]">
+            <section class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540] space-y-2 overflow-hidden">
+                <h3 class="text-xs sm:text-sm font-bold text-[#f7a21b] uppercase tracking-wider">Decomposição Binária dos Octetos (Bits Reais)</h3>
+                <div class="text-xs text-gray-400 pb-1">
+                    <p><strong>Por que os três campos (IP, Máscara e Rede) parecem valores parecidos visualmente?</strong></p>
+                    <p class="mt-1">Isso ocorre quando o endereço IP inserido e a máscara de rede possuem grande proporção de bits <code class="text-[#f7a21b]">1</code> em comum nos primeiros octetos (por exemplo, na faixa <code class="text-[#f7a21b]">192.168.x.x</code> com máscara <code class="text-sky-400">255.255.255.0</code>). Os 24 primeiros bits (os três primeiros octetos <code class="text-emerald-400">11000000.10101000.00000001</code>) são exatamente idênticos porque a operação lógica <strong class="text-sky-400">AND</strong> preserva os bits do IP onde a máscara é <code class="text-sky-400">1</code>. A diferença real e o isolamento dos hosts ocorrem exclusivamente no último octeto!</p>
+                </div>
+                <div class="w-full overflow-x-auto pb-2 -mx-1 px-1">
+                    <div class="font-mono text-[11px] sm:text-xs space-y-2 min-w-[580px]">
                             <div class="flex justify-between items-center py-1.5 px-2 bg-nbDark/60 rounded border border-[#2d3540]/60">
-                                <span class="w-32 text-gray-400 font-bold flex-shrink-0">IP (Decimal):</span>
+                                <span class="w-40 text-gray-400 font-bold flex-shrink-0">IP (Decimal):</span>
                                 <span id="binIp" class="text-[#f7a21b] tracking-widest font-semibold">11000000.10101000.00000001.00110010</span>
                             </div>
                             <div class="flex justify-between items-center py-1.5 px-2 bg-nbDark/60 rounded border border-[#2d3540]/60">
-                                <span class="w-32 text-gray-400 font-bold flex-shrink-0">Máscara:</span>
+                                <span class="w-40 text-gray-400 font-bold flex-shrink-0">Máscara:</span>
                                 <span id="binMask" class="text-sky-400 tracking-widest font-semibold">11111111.11111111.11111111.00000000</span>
                             </div>
                             <div class="flex justify-between items-center py-1.5 px-2 bg-nbDark/60 rounded border border-[#2d3540]/60">
-                                <span class="w-32 text-gray-400 font-bold flex-shrink-0">Rede (AND):</span>
+                                <span class="w-40 text-gray-400 font-bold flex-shrink-0">Rede (IP AND Máscara):</span>
                                 <span id="binNet" class="text-emerald-400 tracking-widest font-semibold">11000000.10101000.00000001.00000000</span>
                             </div>
                         </div>
                     </div>
-                    <p class="text-[10px] text-gray-400 italic text-center sm:hidden">← Deslize horizontalmente para ver todos os octetos completos →</p>
+                    <p class="text-[10px] text-gray-400 italic text-center sm:hidden">← Deslize horizontalmente para ver todos os bits →</p>
+                </div>
+
+                <!-- NOVA SEÇÃO EXPLICATIVA: A OPERAÇÃO LÓGICA AND -->
+                <div class="mt-4 pt-4 border-t border-[#2d3540] space-y-3">
+                    <h4 class="text-xs sm:text-sm font-bold text-[#f7a21b] flex items-center gap-1.5">
+                        💡 Como Funciona a Operação Lógica AND Bit a Bit (E Lógico)
+                    </h4>
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        A operação <strong>AND</strong> (Conjunção Lógica) é o princípio fundamental utilizado pelos roteadores e dispositivos de rede para extrair o <strong>ID da Rede</strong> a partir de um endereço IP e de sua máscara. A regra matemática é simples: o resultado só é <code class="text-emerald-400 font-bold">1</code> se <strong>ambos</strong> os bits comparados forem <code class="text-emerald-400 font-bold">1</code>. Caso contrário, o resultado é <code class="text-amber-400 font-bold">0</code>.
+                    </p>
+
+                    <!-- TABELA DA VERDADE DO AND -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-center text-xs border-collapse max-w-md mx-auto font-mono my-2">
+                            <thead>
+                                <tr class="bg-nbDark border-b border-[#2d3540] text-gray-300">
+                                    <th class="p-2 border border-[#2d3540]">Bit IP</th>
+                                    <th class="p-2 border border-[#2d3540]">Bit Máscara</th>
+                                    <th class="p-2 border border-[#2d3540] text-emerald-400">Resultado (IP AND Máscara)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover:bg-nbDark/40">
+                                    <td class="p-1.5 border border-[#2d3540]">0</td>
+                                    <td class="p-1.5 border border-[#2d3540]">0</td>
+                                    <td class="p-1.5 border border-[#2d3540] text-amber-400 font-bold">0 (Zera o bit)</td>
+                                </tr>
+                                <tr class="hover:bg-nbDark/40">
+                                    <td class="p-1.5 border border-[#2d3540]">1</td>
+                                    <td class="p-1.5 border border-[#2d3540]">0</td>
+                                    <td class="p-1.5 border border-[#2d3540] text-amber-400 font-bold">0 (Zera o bit)</td>
+                                </tr>
+                                <tr class="hover:bg-nbDark/40">
+                                    <td class="p-1.5 border border-[#2d3540]">0</td>
+                                    <td class="p-1.5 border border-[#2d3540]">1</td>
+                                    <td class="p-1.5 border border-[#2d3540] text-amber-400 font-bold">0 (Zera o bit)</td>
+                                </tr>
+                                <tr class="hover:bg-nbDark/40 bg-[#4b538b]/10">
+                                    <td class="p-1.5 border border-[#2d3540] font-bold">1</td>
+                                    <td class="p-1.5 border border-[#2d3540] font-bold">1</td>
+                                    <td class="p-1.5 border border-[#2d3540] text-emerald-400 font-bold">1 (Preserva o bit do IP!)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p class="text-xs text-gray-400 italic">
+                        <strong>Aplicação Prática:</strong> Como a máscara de rede é composta por uma sequência contínua de <code class="text-sky-400">1</code>s seguida por <code class="text-amber-400">0</code>s, a operação AND faz com que os bits correspondentes aos <code class="text-sky-400">1</code>s copiem fielmente o endereço IP (formando o ID da Rede), enquanto os bits correspondentes aos <code class="text-amber-400">0</code>s da máscara zerem completamente o final do endereço, revelando o bloco de hosts disponíveis.
+                    </p>
                 </div>
             </section>
 
