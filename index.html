@@ -40,11 +40,21 @@
         body {
             transition: background-color 0.3s ease, color 0.3s ease;
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         ::selection {
             background-color: #d60257;
             color: #ffffff;
+        }
+
+        /* Otimização de toque e scroll para Mobile */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
         /* TEMA ESCURO */
@@ -164,6 +174,7 @@
             color: #ffffff;
             font-weight: 700;
             transition: all 0.2s ease;
+            touch-action: manipulation;
         }
 
         .header-btn:hover {
@@ -174,6 +185,7 @@
 
         .tab-btn {
             transition: all 0.2s ease;
+            touch-action: manipulation;
         }
 
         .tab-btn.active {
@@ -921,52 +933,52 @@
 
     <!-- CABEÇALHO PRINCIPAL DA PLATAFORMA -->
     <header class="bg-[#15191d] border-b border-[#4b538b] sticky top-0 z-50 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <span class="bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-black px-3 py-1 rounded text-sm tracking-wider uppercase shadow-sm">SUITE</span>
-                <h1 class="text-xl font-bold tracking-tight text-creamPale drop-shadow-sm">Network Engineering & Subnet Suite</h1>
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-2 sm:space-x-3 overflow-hidden">
+                <span class="bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-black px-2 py-0.5 sm:px-3 sm:py-1 rounded text-xs sm:text-sm tracking-wider uppercase shadow-sm flex-shrink-0">SUITE</span>
+                <h1 class="text-sm sm:text-lg md:text-xl font-bold tracking-tight text-creamPale drop-shadow-sm truncate">Network Engineering & Subnet</h1>
             </div>
-            <div class="flex items-center space-x-2 no-print">
-                <button onclick="exportToPDF()" class="header-btn px-3 py-2 rounded-lg text-xs md:text-sm shadow flex items-center gap-1.5" title="Exportar impressão / salvar em PDF">
-                    📄 <span>PDF / Imprimir</span>
+            <div class="flex items-center space-x-1.5 sm:space-x-2 no-print flex-shrink-0">
+                <button onclick="exportToPDF()" class="header-btn px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs shadow flex items-center gap-1" title="Exportar impressão / salvar em PDF">
+                    📄 <span class="hidden sm:inline">PDF / Imprimir</span><span class="sm:hidden">PDF</span>
                 </button>
-                <button onclick="toggleTheme()" class="header-btn px-3 py-2 rounded-lg text-xs md:text-sm shadow flex items-center gap-1.5">
-                    <span id="themeLabel">☀️ Modo Claro</span>
+                <button onclick="toggleTheme()" class="header-btn px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs shadow flex items-center gap-1">
+                    <span id="themeLabel">☀️ <span class="hidden sm:inline">Modo Claro</span></span>
                 </button>
             </div>
         </div>
 
-        <!-- SISTEMA DE ABAS (NAVBAR) -->
-        <nav class="max-w-7xl mx-auto px-4 pt-2 flex overflow-x-auto border-t border-[#2d3540] no-print">
-            <button id="btn-tab-ipv4" onclick="switchTab('tab-ipv4')" class="tab-btn active px-4 py-2 text-xs md:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap">
+        <!-- SISTEMA DE ABAS (NAVBAR) COM SCROLL HORIZONTAL MOBILE -->
+        <nav class="max-w-7xl mx-auto px-2 sm:px-4 pt-1 flex overflow-x-auto no-scrollbar border-t border-[#2d3540] no-print gap-1 sm:gap-2">
+            <button id="btn-tab-ipv4" onclick="switchTab('tab-ipv4')" class="tab-btn active px-3 py-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap rounded-t-md">
                 🌐 1. IPv4 & FLSM
             </button>
-            <button id="btn-tab-vlsm" onclick="switchTab('tab-vlsm')" class="tab-btn px-4 py-2 text-xs md:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap">
+            <button id="btn-tab-vlsm" onclick="switchTab('tab-vlsm')" class="tab-btn px-3 py-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap rounded-t-md">
                 🔀 2. VLSM & Supernetting
             </button>
-            <button id="btn-tab-ipv6" onclick="switchTab('tab-ipv6')" class="tab-btn px-4 py-2 text-xs md:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap">
+            <button id="btn-tab-ipv6" onclick="switchTab('tab-ipv6')" class="tab-btn px-3 py-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap rounded-t-md">
                 ⚡ 3. IPv6 & EUI-64
             </button>
-            <button id="btn-tab-perf" onclick="switchTab('tab-perf')" class="tab-btn px-4 py-2 text-xs md:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap">
+            <button id="btn-tab-perf" onclick="switchTab('tab-perf')" class="tab-btn px-3 py-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap rounded-t-md">
                 🚀 4. Desempenho & Tráfego
             </button>
-            <button id="btn-tab-phys" onclick="switchTab('tab-phys')" class="tab-btn px-4 py-2 text-xs md:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap">
+            <button id="btn-tab-phys" onclick="switchTab('tab-phys')" class="tab-btn px-3 py-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap rounded-t-md">
                 📡 5. Física, Enlace & OSPF
             </button>
         </nav>
     </header>
 
     <!-- CONTEÚDO DAS ABAS -->
-    <main class="max-w-7xl mx-auto px-4 pt-8">
+    <main class="max-w-7xl mx-auto px-3 sm:px-4 pt-4 sm:pt-8">
 
         <!-- ABA 1: IPV4 & FLSM (MÓDULO COMPLETO RESTAURADO) -->
         <div id="tab-ipv4" class="tab-content space-y-8">
             <!-- INTRODUÇÃO DIDÁTICA E TÉCNICA -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-sm space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b] flex items-center gap-2">
+            <section class="bg-nbDark p-4 sm:p-6 rounded-xl border border-[#4b538b] shadow-sm space-y-4">
+                <h2 class="text-xl sm:text-2xl font-bold text-[#f7a21b] flex items-center gap-2">
                     📌 Arquitetura e Engenharia de Sub-redes IPv4
                 </h2>
-                <p class="text-base leading-relaxed">
+                <p class="text-sm sm:text-base leading-relaxed">
                     O <strong>Subnetting (Sub-roteamento)</strong> é o processo de divisão lógica de uma rede IP física em múltiplas redes menores. Esta prática maximiza a eficiência do roteamento, reduz domínios de <i>broadcast</i>, otimiza o desempenho dos comutadores (switches) e fortalece políticas de segurança por segmentação de firewall.
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
@@ -986,94 +998,94 @@
             </section>
 
             <!-- CALCULADORA DE SUB-REDES INTERATIVA -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-6">
-                <div class="border-b border-[#2d3540] pb-4 flex flex-wrap justify-between items-center gap-4">
+            <section class="bg-nbDark p-4 sm:p-6 rounded-xl border border-[#4b538b] shadow-md space-y-6">
+                <div class="border-b border-[#2d3540] pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-[#f7a21b]">⚡ Calculadora Inteligente de Sub-redes IPv4</h2>
-                        <p class="text-sm text-gray-400">Insira um IP e selecione a máscara para atualizar instantaneamente todos os cálculos.</p>
+                        <h2 class="text-xl sm:text-2xl font-bold text-[#f7a21b]">⚡ Calculadora Inteligente de Sub-redes IPv4</h2>
+                        <p class="text-xs sm:text-sm text-gray-400">Insira um IP e selecione a máscara para atualizar instantaneamente todos os cálculos.</p>
                     </div>
-                    <div class="flex items-center gap-2 no-print">
-                        <button onclick="copySummary()" class="px-3 py-1.5 rounded bg-[#4b538b]/40 hover:bg-[#4b538b]/60 text-xs font-bold transition flex items-center gap-1 border border-[#4b538b]">
+                    <div class="flex items-center gap-2 w-full sm:w-auto no-print">
+                        <button onclick="copySummary()" class="flex-1 sm:flex-none px-3 py-2 rounded bg-[#4b538b]/40 hover:bg-[#4b538b]/60 text-xs font-bold transition flex items-center justify-center gap-1 border border-[#4b538b]">
                             📋 <span id="copyBtnLabel">Copiar Resumo</span>
                         </button>
-                        <button onclick="resetCalculator()" class="px-3 py-1.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold transition flex items-center gap-1 border border-red-800">
+                        <button onclick="resetCalculator()" class="flex-1 sm:flex-none px-3 py-2 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold transition flex items-center justify-center gap-1 border border-red-800">
                             🔄 <span>Restaurar Padrão</span>
                         </button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                     <div>
-                        <label class="block text-sm font-semibold mb-2">Endereço IP (IPv4):</label>
-                        <input type="text" id="ipInput" value="192.168.1.50" class="w-full p-3 rounded-lg bg-nbCodeBg border border-[#2d3540] focus:outline-none focus:ring-2 focus:ring-[#f7a21b] font-mono text-base" placeholder="Ex: 192.168.1.1">
+                        <label class="block text-xs sm:text-sm font-semibold mb-1.5 sm:mb-2">Endereço IP (IPv4):</label>
+                        <input type="text" id="ipInput" value="192.168.1.50" class="w-full p-2.5 sm:p-3 rounded-lg bg-nbCodeBg border border-[#2d3540] focus:outline-none focus:ring-2 focus:ring-[#f7a21b] font-mono text-sm sm:text-base" placeholder="Ex: 192.168.1.1">
                         <p id="errorMsg" class="text-red-400 text-xs mt-1 hidden font-bold">Endereço IP inválido. Use a sintaxe 0.0.0.0 a 255.255.255.255.</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold mb-2">Máscara de Rede (CIDR):</label>
-                        <select id="cidrSelect" class="w-full p-3 rounded-lg bg-nbCodeBg border border-[#2d3540] focus:outline-none focus:ring-2 focus:ring-[#f7a21b] font-mono text-base">
+                        <label class="block text-xs sm:text-sm font-semibold mb-1.5 sm:mb-2">Máscara de Rede (CIDR):</label>
+                        <select id="cidrSelect" class="w-full p-2.5 sm:p-3 rounded-lg bg-nbCodeBg border border-[#2d3540] focus:outline-none focus:ring-2 focus:ring-[#f7a21b] font-mono text-sm sm:text-base">
                             <!-- Preenchido via JS -->
                         </select>
                     </div>
                     <div class="flex items-end gap-2">
-                        <button onclick="calculateSubnet()" class="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow">
+                        <button onclick="calculateSubnet()" class="w-full py-2.5 sm:py-3 px-6 rounded-lg bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm sm:text-base">
                             Recalcular
                         </button>
                     </div>
                 </div>
 
                 <!-- RESULTADOS EM CARDS -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-2 sm:pt-4">
+                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
                         <span class="text-xs text-gray-400 uppercase font-bold">Máscara Decimal</span>
-                        <div id="resMask" class="text-lg font-mono font-bold text-[#f7a21b]">255.255.255.0</div>
+                        <div id="resMask" class="text-base sm:text-lg font-mono font-bold text-[#f7a21b]">255.255.255.0</div>
                     </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
+                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
                         <span class="text-xs text-gray-400 uppercase font-bold">Máscara Coringa (Wildcard / ACL)</span>
-                        <div id="resWildcard" class="text-lg font-mono font-bold text-amber-400">0.0.0.255</div>
+                        <div id="resWildcard" class="text-base sm:text-lg font-mono font-bold text-amber-400">0.0.0.255</div>
                     </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
+                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
                         <span class="text-xs text-gray-400 uppercase font-bold">ID da Rede (Network)</span>
-                        <div id="resNet" class="text-lg font-mono font-bold text-sky-400">192.168.1.0</div>
+                        <div id="resNet" class="text-base sm:text-lg font-mono font-bold text-sky-400">192.168.1.0</div>
                     </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
+                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
                         <span class="text-xs text-gray-400 uppercase font-bold">Endereço de Broadcast</span>
-                        <div id="resBroadcast" class="text-lg font-mono font-bold text-amber-400">192.168.1.255</div>
+                        <div id="resBroadcast" class="text-base sm:text-lg font-mono font-bold text-amber-400">192.168.1.255</div>
                     </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] sm:col-span-2">
+                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540] sm:col-span-2">
                         <span class="text-xs text-gray-400 uppercase font-bold">Faixa de IPs Úteis</span>
-                        <div id="resRange" class="text-sm font-mono font-bold text-emerald-400">192.168.1.1 - 192.168.1.254</div>
+                        <div id="resRange" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 break-all">192.168.1.1 - 192.168.1.254</div>
                     </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
+                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
                         <span class="text-xs text-gray-400 uppercase font-bold">Total de Endereços</span>
-                        <div id="resTotal" class="text-lg font-mono font-bold">256</div>
+                        <div id="resTotal" class="text-base sm:text-lg font-mono font-bold">256</div>
                     </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
+                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
                         <span class="text-xs text-gray-400 uppercase font-bold">Hosts Úteis</span>
-                        <div id="resUsable" class="text-lg font-mono font-bold text-emerald-400">254</div>
+                        <div id="resUsable" class="text-base sm:text-lg font-mono font-bold text-emerald-400">254</div>
                     </div>
                 </div>
 
                 <!-- PAINEL DE AUDITORIA E CLASSIFICAÇÃO INTELIGENTE -->
-                <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] flex flex-wrap justify-between items-center gap-3">
-                    <span class="text-xs font-bold text-gray-300 uppercase">Diagnóstico de Tipo e Segurança de Escopo IP:</span>
+                <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3">
+                    <span class="text-xs font-bold text-gray-300 uppercase">Diagnóstico de Tipo e Escopo IP:</span>
                     <span id="auditIpBadge" class="px-3 py-1 rounded-full text-xs font-bold border bg-emerald-950/80 text-emerald-300 border-emerald-700">
                         Privado (RFC 1918 - Não Roteável na WAN)
                     </span>
                 </div>
 
                 <!-- REPRESENTAÇÃO BINÁRIA -->
-                <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                    <h3 class="text-sm font-bold text-[#f7a21b] uppercase tracking-wider">Decomposição Binária dos Octetos</h3>
-                    <div class="font-mono text-xs space-y-1 overflow-x-auto">
-                        <div class="flex justify-between min-w-[500px]">
+                <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540] space-y-2 overflow-hidden">
+                    <h3 class="text-xs sm:text-sm font-bold text-[#f7a21b] uppercase tracking-wider">Decomposição Binária dos Octetos</h3>
+                    <div class="font-mono text-[11px] sm:text-xs space-y-1.5 overflow-x-auto pb-1">
+                        <div class="flex justify-between min-w-[480px]">
                             <span class="w-24 text-gray-400">IP (Decimal):</span>
                             <span id="binIp" class="text-[#f7a21b]">11000000.10101000.00000001.00110010</span>
                         </div>
-                        <div class="flex justify-between min-w-[500px]">
+                        <div class="flex justify-between min-w-[480px]">
                             <span class="w-24 text-gray-400">Máscara:</span>
                             <span id="binMask" class="text-sky-400">11111111.11111111.11111111.00000000</span>
                         </div>
-                        <div class="flex justify-between min-w-[500px]">
+                        <div class="flex justify-between min-w-[480px]">
                             <span class="w-24 text-gray-400">Rede (AND):</span>
                             <span id="binNet" class="text-emerald-400">11000000.10101000.00000001.00000000</span>
                         </div>
@@ -1321,47 +1333,47 @@
         <!-- ABA 2: VLSM & SUPERNETTING -->
         <div id="tab-vlsm" class="tab-content hidden space-y-8">
             <!-- CALCULADORA VLSM REAL -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-6">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">🔀 Calculadora VLSM (Sub-redes de Tamanho Variável)</h2>
-                <p class="text-sm text-gray-400">Insira um bloco IP base e configure a necessidade de hosts por setor. A plataforma ordenará automaticamente do maior para o menor bloco sem desperdício.</p>
+            <section class="bg-nbDark p-4 sm:p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4 sm:space-y-6">
+                <h2 class="text-xl sm:text-2xl font-bold text-[#f7a21b]">🔀 Calculadora VLSM (Sub-redes de Tamanho Variável)</h2>
+                <p class="text-xs sm:text-sm text-gray-400">Insira um bloco IP base e configure a necessidade de hosts por setor. A plataforma ordenará automaticamente do maior para o menor bloco sem desperdício.</p>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-bold text-gray-400 mb-1">Bloco Base (IP/CIDR):</label>
                         <input type="text" id="vlsmBaseInput" value="192.168.10.0/24" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm focus:outline-none focus:ring-1 focus:ring-[#f7a21b]">
                         <p id="vlsmErrorMsg" class="text-red-400 text-xs mt-1 hidden font-bold">Formato inválido. Use a sintaxe ex: 192.168.10.0/24</p>
                     </div>
                     <div class="flex items-end">
-                        <button onclick="addVlsmSector()" class="w-full py-2.5 px-4 rounded bg-[#4b538b]/40 hover:bg-[#4b538b]/60 text-white font-bold text-xs transition border border-[#4b538b]">
+                        <button onclick="addVlsmSector()" class="w-full py-2.5 px-4 rounded bg-[#4b538b]/40 hover:bg-[#4b538b]/60 text-white font-bold text-xs sm:text-sm transition border border-[#4b538b]">
                             + Adicionar Setor
                         </button>
                     </div>
                 </div>
 
-                <div id="vlsmSectorsContainer" class="space-y-3">
+                <div id="vlsmSectorsContainer" class="space-y-2.5 sm:space-y-3">
                     <div class="flex items-center gap-2 vlsm-sector-row">
-                        <input type="text" placeholder="Nome do Setor" value="Engenharia" class="vlsm-name flex-1 p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <input type="number" placeholder="Hosts" value="60" min="1" class="vlsm-hosts w-28 p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <button onclick="this.parentElement.remove()" class="px-2.5 py-2.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold border border-red-800">✕</button>
+                        <input type="text" placeholder="Nome do Setor" value="Engenharia" class="vlsm-name flex-1 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
+                        <input type="number" placeholder="Hosts" value="60" min="1" class="vlsm-hosts w-20 sm:w-28 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
+                        <button onclick="this.parentElement.remove()" class="px-2.5 py-2 sm:py-2.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold border border-red-800">✕</button>
                     </div>
                     <div class="flex items-center gap-2 vlsm-sector-row">
-                        <input type="text" placeholder="Nome do Setor" value="Vendas" class="vlsm-name flex-1 p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <input type="number" placeholder="Hosts" value="25" min="1" class="vlsm-hosts w-28 p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <button onclick="this.parentElement.remove()" class="px-2.5 py-2.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold border border-red-800">✕</button>
+                        <input type="text" placeholder="Nome do Setor" value="Vendas" class="vlsm-name flex-1 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
+                        <input type="number" placeholder="Hosts" value="25" min="1" class="vlsm-hosts w-20 sm:w-28 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
+                        <button onclick="this.parentElement.remove()" class="px-2.5 py-2 sm:py-2.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold border border-red-800">✕</button>
                     </div>
                     <div class="flex items-center gap-2 vlsm-sector-row">
-                        <input type="text" placeholder="Nome do Setor" value="Diretoria" class="vlsm-name flex-1 p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <input type="number" placeholder="Hosts" value="10" min="1" class="vlsm-hosts w-28 p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <button onclick="this.parentElement.remove()" class="px-2.5 py-2.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold border border-red-800">✕</button>
+                        <input type="text" placeholder="Nome do Setor" value="Diretoria" class="vlsm-name flex-1 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
+                        <input type="number" placeholder="Hosts" value="10" min="1" class="vlsm-hosts w-20 sm:w-28 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
+                        <button onclick="this.parentElement.remove()" class="px-2.5 py-2 sm:py-2.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold border border-red-800">✕</button>
                     </div>
                 </div>
 
-                <button onclick="calculateVlsm()" class="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow">
+                <button onclick="calculateVlsm()" class="w-full py-2.5 sm:py-3 px-6 rounded-lg bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm sm:text-base">
                     Calcular Alocação VLSM
                 </button>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
+                    <table class="w-full text-left text-sm border-collapse min-w-[600px]">
                         <thead>
                             <tr class="bg-nbCodeBg border-b border-[#2d3540] text-gray-300 font-bold">
                                 <th class="p-3">Setor</th>
@@ -1381,17 +1393,17 @@
             </section>
 
             <!-- SUMARIZAÇÃO DE ROTAS (SUPERNETTING) -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">🌐 Sumarização de Rotas (Supernetting / Route Aggregation)</h2>
-                <p class="text-sm text-gray-400">Insira dois ou mais endereços de rede (um por linha) para agregar em uma única rota sumarizada contígua.</p>
+            <section class="bg-nbDark p-4 sm:p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
+                <h2 class="text-xl sm:text-2xl font-bold text-[#f7a21b]">🌐 Sumarização de Rotas (Supernetting / Route Aggregation)</h2>
+                <p class="text-xs sm:text-sm text-gray-400">Insira dois ou mais endereços de rede (um por linha) para agregar em uma única rota sumarizada contígua.</p>
 
-                <textarea id="supernetInput" rows="4" class="w-full p-3 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-xs focus:outline-none focus:ring-1 focus:ring-[#f7a21b]" placeholder="192.168.0.0/24&#10;192.168.1.0/24&#10;192.168.2.0/24&#10;192.168.3.0/24"></textarea>
+                <textarea id="supernetInput" rows="4" class="w-full p-2.5 sm:p-3 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-xs focus:outline-none focus:ring-1 focus:ring-[#f7a21b]" placeholder="192.168.0.0/24&#10;192.168.1.0/24&#10;192.168.2.0/24&#10;192.168.3.0/24"></textarea>
 
-                <button onclick="calculateSupernet()" class="w-full py-2.5 px-6 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm">
+                <button onclick="calculateSupernet()" class="w-full py-2.5 px-6 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-xs sm:text-sm">
                     Gerar Rota Sumarizada
                 </button>
 
-                <div id="supernetResult" class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
+                <div id="supernetResult" class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
                     <span class="text-gray-400 text-xs">Aguardando endereços...</span>
                 </div>
             </section>
