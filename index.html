@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Engineering & Subnet Suite</title>
+    <title>Network Engineering & Network Suite</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -196,15 +196,15 @@
             box-shadow: 0 0 10px rgba(214, 2, 87, 0.3);
         }
 
-        /* Correção para evitar sobreposição: Header em fluxo relativo natural sem cobrir o topo */
+        /* Topo fixo inteligente com margem segura para mobile */
         header {
-            position: relative;
+            position: sticky;
             top: 0;
             z-index: 50;
         }
 
         main {
-            padding-top: 1.5rem !important;
+            padding-top: 1rem !important;
         }
 
         /* CONFIGURAÇÕES DE IMPRESSÃO EXATA EM PDF */
@@ -947,7 +947,7 @@
         <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-row justify-between items-center gap-2">
             <div class="flex items-center space-x-2 sm:space-x-3 overflow-hidden">
                 <span class="bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-black px-2 py-0.5 sm:px-3 sm:py-1 rounded text-xs sm:text-sm tracking-wider uppercase shadow-sm flex-shrink-0">SUITE</span>
-                <h1 class="text-sm sm:text-lg md:text-xl font-bold tracking-tight text-creamPale drop-shadow-sm truncate">Network Engineering & Subnet</h1>
+                <h1 class="text-sm sm:text-lg md:text-xl font-bold tracking-tight text-creamPale drop-shadow-sm truncate">Network Engineering & Network</h1>
             </div>
             <div class="flex items-center space-x-1.5 sm:space-x-2 no-print flex-shrink-0">
                 <button onclick="exportToPDF()" class="header-btn px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs shadow flex items-center gap-1" title="Exportar impressão / salvar em PDF">
@@ -1103,7 +1103,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="text-[10px] text-gray-400 italic text-center sm:hidden">← Deslize para o lado para ver todos os octetos →</p>
+                    <p class="text-[10px] text-gray-400 italic text-center sm:hidden">← Deslize horizontalmente para ver todos os octetos completos →</p>
                 </div>
             </section>
 
@@ -1709,7 +1709,7 @@
     </main>
 
     <footer class="max-w-7xl mx-auto px-4 mt-12 pt-6 border-t border-[#4b538b] text-center text-xs text-gray-400">
-        Network Engineering & Subnet Suite — Paleta Vibrante (#4b538b, #15191d, #f7a21b, #e45635, #d60257). Plataforma completa e validada sem erros.
+        Network Engineering & Network Suite — Paleta Vibrante (#4b538b, #15191d, #f7a21b, #e45635, #d60257). Plataforma completa e validada sem erros.
     </footer>
 
 </body>
