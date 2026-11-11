@@ -1087,20 +1087,23 @@
                 <!-- REPRESENTAÇÃO BINÁRIA -->
                 <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540] space-y-2 overflow-hidden">
                     <h3 class="text-xs sm:text-sm font-bold text-[#f7a21b] uppercase tracking-wider">Decomposição Binária dos Octetos</h3>
-                    <div class="font-mono text-[11px] sm:text-xs space-y-1.5 overflow-x-auto pb-1">
-                        <div class="flex justify-between min-w-[480px]">
-                            <span class="w-24 text-gray-400">IP (Decimal):</span>
-                            <span id="binIp" class="text-[#f7a21b]">11000000.10101000.00000001.00110010</span>
-                        </div>
-                        <div class="flex justify-between min-w-[480px]">
-                            <span class="w-24 text-gray-400">Máscara:</span>
-                            <span id="binMask" class="text-sky-400">11111111.11111111.11111111.00000000</span>
-                        </div>
-                        <div class="flex justify-between min-w-[480px]">
-                            <span class="w-24 text-gray-400">Rede (AND):</span>
-                            <span id="binNet" class="text-emerald-400">11000000.10101000.00000001.00000000</span>
+                    <div class="w-full overflow-x-auto pb-2 -mx-1 px-1">
+                        <div class="font-mono text-[11px] sm:text-xs space-y-2 min-w-[580px]">
+                            <div class="flex justify-between items-center py-1.5 px-2 bg-nbDark/60 rounded border border-[#2d3540]/60">
+                                <span class="w-32 text-gray-400 font-bold flex-shrink-0">IP (Decimal):</span>
+                                <span id="binIp" class="text-[#f7a21b] tracking-widest font-semibold">11000000.10101000.00000001.00110010</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1.5 px-2 bg-nbDark/60 rounded border border-[#2d3540]/60">
+                                <span class="w-32 text-gray-400 font-bold flex-shrink-0">Máscara:</span>
+                                <span id="binMask" class="text-sky-400 tracking-widest font-semibold">11111111.11111111.11111111.00000000</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1.5 px-2 bg-nbDark/60 rounded border border-[#2d3540]/60">
+                                <span class="w-32 text-gray-400 font-bold flex-shrink-0">Rede (AND):</span>
+                                <span id="binNet" class="text-emerald-400 tracking-widest font-semibold">11000000.10101000.00000001.00000000</span>
+                            </div>
                         </div>
                     </div>
+                    <p class="text-[10px] text-gray-400 italic text-center sm:hidden">← Deslize para o lado para ver todos os octetos →</p>
                 </div>
             </section>
 
