@@ -189,11 +189,22 @@
         }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, #4b538b 0%, #d60257 100%) !important;
+            background: linear-gradient(135deg, #4b538b 0%, #d60257) !important;
             color: #ffffff !important;
             font-weight: 800 !important;
             border-color: #f7a21b !important;
             box-shadow: 0 0 10px rgba(214, 2, 87, 0.3);
+        }
+
+        /* Correção para evitar sobreposição: Header em fluxo relativo natural sem cobrir o topo */
+        header {
+            position: relative;
+            top: 0;
+            z-index: 50;
+        }
+
+        main {
+            padding-top: 1.5rem !important;
         }
 
         /* CONFIGURAÇÕES DE IMPRESSÃO EXATA EM PDF */
@@ -931,8 +942,8 @@
 </head>
 <body class="dark min-h-screen pb-16">
 
-    <!-- CABEÇALHO PRINCIPAL DA PLATAFORMA -->
-    <header class="bg-[#15191d] border-b border-[#4b538b] sticky top-0 z-50 shadow-lg">
+    <!-- CABEÇALHO PRINCIPAL DA PLATAFORMA (STICKY NATURAL) -->
+    <header class="bg-[#15191d] border-b border-[#4b538b] shadow-lg">
         <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-row justify-between items-center gap-2">
             <div class="flex items-center space-x-2 sm:space-x-3 overflow-hidden">
                 <span class="bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-black px-2 py-0.5 sm:px-3 sm:py-1 rounded text-xs sm:text-sm tracking-wider uppercase shadow-sm flex-shrink-0">SUITE</span>
@@ -968,8 +979,8 @@
         </nav>
     </header>
 
-    <!-- CONTEÚDO DAS ABAS -->
-    <main class="max-w-7xl mx-auto px-3 sm:px-4 pt-4 sm:pt-8">
+    <!-- CONTEÚDO DAS ABAS COM ESPAÇAMENTO LIMPO E FLUIDO -->
+    <main class="max-w-7xl mx-auto px-3 sm:px-4 pb-12">
 
         <!-- ABA 1: IPV4 & FLSM (MÓDULO COMPLETO RESTAURADO) -->
         <div id="tab-ipv4" class="tab-content space-y-8">
