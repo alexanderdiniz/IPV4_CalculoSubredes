@@ -1,1770 +1,1297 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Engineering & Network Suite</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brandPrimary: '#4b538b',
-                        brandBgDark: '#15191d',
-                        brandAmber: '#f7a21b',
-                        brandCoral: '#e45635',
-                        brandMagenta: '#d60257',
-                        
-                        steelDark: '#15191d',
-                        steelMid: '#4b538b',
-                        steelLight: '#8b95a3',
-                        saffron: '#f7a21b',
-                        creamPale: '#e8edf3',
-                        
-                        nbDark: '#15191d',
-                        nbCardDark: '#1d2329',
-                        nbBorderDark: '#2d3540',
-                        nbPrimary: '#15191d',
-                        nbSecondary: '#f7a21b',
-                        nbAccent: '#d60257',
-                        nbCodeBg: '#13171b'
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            transition: background-color 0.3s ease, color 0.3s ease;
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        ::selection {
-            background-color: #d60257;
-            color: #ffffff;
-        }
-
-        /* Otimização de toque e scroll para Mobile */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* TEMA ESCURO */
-        body.dark {
-            background: linear-gradient(180deg, #15191d 0%, #1a1f24 100%) !important;
-            color: #e8edf3 !important;
-        }
-
-        /* TEMA CLARO */
-        body.light-theme {
-            background: linear-gradient(180deg, #f4f5fa 0%, #eceef5 100%) !important;
-            color: #15191d !important;
-        }
-
-        body.light-theme .bg-nbDark,
-        body.light-theme .bg-nbCardDark {
-            background-color: #ffffff !important;
-            border-color: #c5cbd9 !important;
-            box-shadow: 0 4px 6px -1px rgba(21, 25, 29, 0.08);
-        }
-
-        body.light-theme h1, 
-        body.light-theme h2, 
-        body.light-theme h3,
-        body.light-theme h4 {
-            color: #15191d !important;
-        }
-
-        body.light-theme p, 
-        body.light-theme td, 
-        body.light-theme th,
-        body.light-theme li {
-            color: #15191d !important;
-        }
-
-        body.light-theme .text-gray-300,
-        body.light-theme .text-gray-400 {
-            color: #3d4459 !important;
-        }
-
-        body.light-theme .text-nbSecondary,
-        body.light-theme .text-nbAccent,
-        body.light-theme .text-saffron {
-            color: #7a4f00 !important;
-            font-weight: 800;
-        }
-
-        body.light-theme .text-emerald-400,
-        body.light-theme .text-emerald-300 {
-            color: #15803D !important;
-            font-weight: 800;
-        }
-
-        body.light-theme .text-sky-400,
-        body.light-theme .text-sky-300 {
-            color: #4b538b !important;
-            font-weight: 800;
-        }
-
-        body.light-theme .text-amber-400,
-        body.light-theme .text-amber-300 {
-            color: #a83214 !important;
-            font-weight: 800;
-        }
-
-        body.light-theme .text-white {
-            color: #15191d !important;
-        }
-
-        /* Inputs e selects em tema claro */
-        body.light-theme input,
-        body.light-theme select,
-        body.light-theme textarea {
-            background-color: #ffffff !important;
-            color: #15191d !important;
-            border: 2px solid #c5cbd9 !important;
-            font-weight: 700 !important;
-        }
-
-        body.light-theme input:focus,
-        body.light-theme select:focus,
-        body.light-theme textarea:focus {
-            border-color: #f7a21b !important;
-            background-color: #ffffff !important;
-            box-shadow: 0 0 0 3px rgba(247, 162, 27, 0.2) !important;
-        }
-
-        /* Caixas de código e contêineres de resultados */
-        body.light-theme .bg-nbCodeBg {
-            background-color: #f8f9fc !important;
-            border: 1px solid #c5cbd9 !important;
-        }
-
-        /* BARRA DE TÍTULO / HEADER NO TEMA CLARO */
-        body.light-theme header {
-            background-color: #15191d !important;
-            border-bottom: 2px solid #4b538b !important;
-        }
-
-        body.light-theme header h1 {
-            color: #e8edf3 !important;
-        }
-
-        body.light-theme code,
-        body.light-theme pre {
-            color: #15191d !important;
-            font-weight: 700;
-        }
-
-        body.light-theme .border-gray-800,
-        body.light-theme .border-gray-700 {
-            border-color: #c5cbd9 !important;
-        }
-
-        .header-btn {
-            background: linear-gradient(135deg, #f7a21b 0%, #e45635 100%);
-            color: #ffffff;
-            font-weight: 700;
-            transition: all 0.2s ease;
-            touch-action: manipulation;
-        }
-
-        .header-btn:hover {
-            opacity: 0.95;
-            transform: translateY(-1px);
-            box-shadow: 0 0 12px rgba(214, 2, 87, 0.4);
-        }
-
-        .tab-btn {
-            transition: all 0.2s ease;
-            touch-action: manipulation;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, #4b538b 0%, #d60257) !important;
-            color: #ffffff !important;
-            font-weight: 800 !important;
-            border-color: #f7a21b !important;
-            box-shadow: 0 0 10px rgba(214, 2, 87, 0.3);
-        }
-
-        /* Topo fixo inteligente com margem segura para mobile */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-
-        main {
-            padding-top: 1rem !important;
-        }
-
-        /* CONFIGURAÇÕES DE IMPRESSÃO EXATA EM PDF */
-        @media print {
-            header, .no-print, button, nav {
-                display: none !important;
-            }
-            .tab-content {
-                display: block !important;
-            }
-            body {
-                background-color: #FFFFFF !important;
-                color: #000000 !important;
-                padding: 0 !important;
-            }
-            .bg-nbDark, .bg-nbCodeBg {
-                background-color: #F9FAFB !important;
-                border: 1px solid #D1D5DB !important;
-                box-shadow: none !important;
-                color: #000000 !important;
-            }
-            .text-saffron, .text-sky-400, .text-emerald-400, .text-amber-400 {
-                color: #111827 !important;
-                font-weight: bold !important;
-            }
-            main {
-                max-width: 100% !important;
-                padding: 0 !important;
-            }
-        }
-    </style>
-    <script>
-        // GERENCIAMENTO DE ABAS
-        function switchTab(tabId) {
-            const tabs = ['tab-ipv4', 'tab-vlsm', 'tab-ipv6', 'tab-perf', 'tab-phys'];
-            tabs.forEach(id => {
-                const contentEl = document.getElementById(id);
-                const btnEl = document.getElementById('btn-' + id);
-                if (contentEl) contentEl.classList.add('hidden');
-                if (btnEl) btnEl.classList.remove('active');
-            });
-
-            const activeContent = document.getElementById(tabId);
-            const activeBtn = document.getElementById('btn-' + tabId);
-            if (activeContent) activeContent.classList.remove('hidden');
-            if (activeBtn) activeBtn.classList.add('active');
-        }
-
-        // TEMA CLARO / ESCURO
-        function toggleTheme() {
-            const html = document.documentElement;
-            const body = document.body;
-            const themeLabel = document.getElementById('themeLabel');
-            
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                body.classList.remove('dark');
-                body.classList.add('light-theme');
-                if (themeLabel) themeLabel.innerText = '🌙 Modo Escuro';
-            } else {
-                html.classList.add('dark');
-                body.classList.add('dark');
-                body.classList.remove('light-theme');
-                if (themeLabel) themeLabel.innerText = '☀️ Modo Claro';
-            }
-        }
-
-        // UTILITÁRIOS IPV4 DE PROTOCOLO BINÁRIO
-        function ipToLong(ip) {
-            return ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0) >>> 0;
-        }
-
-        function longToIp(long) {
-            return [
-                (long >>> 24) & 255,
-                (long >>> 16) & 255,
-                (long >>> 8) & 255,
-                long & 255
-            ].join('.');
-        }
-
-        function toBinaryString(ip) {
-            return ip.split('.').map(octet => {
-                let bin = parseInt(octet, 10).toString(2);
-                return '0'.repeat(8 - bin.length) + bin;
-            }).join('.');
-        }
-
-        function isValidIp(ip) {
-            if (!ip || typeof ip !== 'string') return false;
-            const parts = ip.trim().split('.');
-            if (parts.length !== 4) return false;
-            return parts.every(p => {
-                const n = Number(p);
-                return !isNaN(n) && n >= 0 && n <= 255 && p === n.toString();
-            });
-        }
-
-        function resetCalculator() {
-            const ipInputEl = document.getElementById('ipInput');
-            const cidrSelectEl = document.getElementById('cidrSelect');
-            const errorMsgEl = document.getElementById('errorMsg');
-
-            if (ipInputEl) ipInputEl.value = '192.168.1.50';
-            if (cidrSelectEl) cidrSelectEl.value = '24';
-            if (errorMsgEl) errorMsgEl.classList.add('hidden');
-
-            calculateSubnet();
-        }
-
-        function exportToPDF() {
-            window.print();
-        }
-
-        function copySummary() {
-            const ip = document.getElementById('ipInput')?.value || '';
-            const mask = document.getElementById('resMask')?.innerText || '';
-            const net = document.getElementById('resNet')?.innerText || '';
-            const broadcast = document.getElementById('resBroadcast')?.innerText || '';
-            const range = document.getElementById('resRange')?.innerText || '';
-            const usable = document.getElementById('resUsable')?.innerText || '';
-
-            const textToCopy = `=== RELATÓRIO DE SUB-REDE IPv4 ===\nIP: ${ip}\nMáscara: ${mask}\nID da Rede: ${net}\nBroadcast: ${broadcast}\nFaixa Útil: ${range}\nHosts Úteis: ${usable}\n=================================`;
-
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = textToCopy;
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
-
-            const copyBtn = document.getElementById('copyBtnLabel');
-            if (copyBtn) {
-                const originalText = copyBtn.innerText;
-                copyBtn.innerText = '✅ Copiado!';
-                setTimeout(() => { copyBtn.innerText = originalText; }, 2000);
-            }
-        }
-
-        // CALCULADORA IPV4 E FLSM PRINCIPAL
-        function calculateSubnet() {
-            const ipInputEl = document.getElementById('ipInput');
-            const cidrSelectEl = document.getElementById('cidrSelect');
-            const errorMsgEl = document.getElementById('errorMsg');
-
-            if (!ipInputEl || !cidrSelectEl) return;
-
-            const ipInput = ipInputEl.value.trim();
-            const cidrSelect = cidrSelectEl.value;
-
-            if (!isValidIp(ipInput)) {
-                if (errorMsgEl) errorMsgEl.classList.remove('hidden');
-                return;
-            }
-            if (errorMsgEl) errorMsgEl.classList.add('hidden');
-
-            const cidr = parseInt(cidrSelect, 10);
-            const hostBits = 32 - cidr;
-            const totalHosts = Math.pow(2, hostBits);
-            const usableHosts = cidr >= 31 ? (cidr === 31 ? 2 : 1) : Math.max(0, totalHosts - 2);
-
-            const maskLong = cidr === 0 ? 0 : (~0 << hostBits) >>> 0;
-            const maskIp = longToIp(maskLong);
-
-            const ipLong = ipToLong(ipInput);
-            const netLong = (ipLong & maskLong) >>> 0;
-            const broadcastLong = (netLong | (~maskLong >>> 0)) >>> 0;
-
-            const netIp = longToIp(netLong);
-            const broadcastIp = longToIp(broadcastLong);
-
-            let firstHost = cidr >= 31 ? netIp : longToIp(netLong + 1);
-            let lastHost = cidr >= 31 ? broadcastIp : longToIp(broadcastLong - 1);
-            if (usableHosts === 0) {
-                firstHost = "N/A";
-                lastHost = "N/A";
-            }
-
-            const setText = (id, text) => {
-                const el = document.getElementById(id);
-                if (el) el.innerText = text;
-            };
-
-            const wildcardLong = (~maskLong >>> 0);
-            const wildcardIp = longToIp(wildcardLong);
-
-            let ipTypeStr = "Público (Roteável na Internet)";
-            let ipTypeBadge = "bg-blue-900/60 text-blue-300 border-blue-700";
-
-            if (ipInput.startsWith('10.') || 
-               (ipInput.startsWith('172.') && parseInt(ipInput.split('.')[1], 10) >= 16 && parseInt(ipInput.split('.')[1], 10) <= 31) ||
-               ipInput.startsWith('192.168.')) {
-                ipTypeStr = "Privado (RFC 1918 - Não Roteável na WAN)";
-                ipTypeBadge = "bg-emerald-950/80 text-emerald-300 border-emerald-700";
-            } else if (ipInput.startsWith('127.')) {
-                ipTypeStr = "Loopback (Diagnóstico Interno)";
-                ipTypeBadge = "bg-amber-950/80 text-amber-300 border-amber-700";
-            } else if (ipInput.startsWith('169.254.')) {
-                ipTypeStr = "APIPA / Link-Local (Autoconfiguração sem DHCP)";
-                ipTypeBadge = "bg-amber-950/80 text-amber-300 border-amber-700";
-            } else if (parseInt(ipInput.split('.')[0], 10) >= 224 && parseInt(ipInput.split('.')[0], 10) <= 239) {
-                ipTypeStr = "Multicast (Classe D)";
-                ipTypeBadge = "bg-purple-950/80 text-purple-300 border-purple-700";
-            }
-
-            const auditBadgeEl = document.getElementById('auditIpBadge');
-            if (auditBadgeEl) {
-                auditBadgeEl.className = `px-3 py-1 rounded-full text-xs font-bold border ${ipTypeBadge}`;
-                auditBadgeEl.innerText = ipTypeStr;
-            }
-
-            setText('resMask', maskIp);
-            setText('resWildcard', wildcardIp);
-            setText('resNet', netIp);
-            setText('resBroadcast', broadcastIp);
-            setText('resRange', `${firstHost} - ${lastHost}`);
-            setText('resTotal', totalHosts.toLocaleString());
-            setText('resUsable', usableHosts.toLocaleString());
-
-            // Garante o formato correto exato dos octetos binários separados por ponto sem espaços extras
-            setText('binIp', toBinaryString(ipInput));
-            setText('binMask', toBinaryString(maskIp));
-            setText('binNet', toBinaryString(netIp));
-
-            setText('flowIp', ipInput);
-            setText('flowCidr', '/' + cidr);
-            setText('flowHostBits', `${hostBits} bits (32 - ${cidr})`);
-            setText('flowBitwiseOp', `${ipInput} AND ${maskIp} = ${netIp}`);
-            
-            const octets = maskIp.split('.').map(Number);
-            const blockSize = cidr >= 24 ? (256 - octets[3]) : totalHosts;
-            setText('flowBlockSize', `${blockSize} IPs (${totalHosts} total)`);
-            setText('flowUsableCalc', `${usableHosts} hosts (${totalHosts} - 2)`);
-
-            setText('vlsmBaseIp', netIp);
-            generateSubnetTable(netLong, cidr);
-        }
-
-        function generateSubnetTable(baseNetLong, cidr) {
-            const tbody = document.getElementById('subnetTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            const subCidr = Math.min(30, cidr + 2);
-            const hostBits = 32 - subCidr;
-            const subSize = Math.pow(2, hostBits);
-            const numSubnets = 4;
-
-            for (let i = 0; i < numSubnets; i++) {
-                const currentNet = (baseNetLong + (i * subSize)) >>> 0;
-                const currentBcast = (currentNet + subSize - 1) >>> 0;
-                const firstIp = longToIp(currentNet + 1);
-                const lastIp = longToIp(currentBcast - 1);
-
-                const tr = document.createElement('tr');
-                tr.className = 'border-b border-[#2d3540] hover:bg-[#4b538b]/10';
-                tr.innerHTML = `
-                    <td class="p-3 font-semibold text-[#f7a21b]">Sub-rede ${i + 1} (${subCidr})</td>
-                    <td class="p-3 font-mono">${longToIp(currentNet)}</td>
-                    <td class="p-3 font-mono text-emerald-400">${firstIp}</td>
-                    <td class="p-3 font-mono text-emerald-400">${lastIp}</td>
-                    <td class="p-3 font-mono text-amber-400">${longToIp(currentBcast)}</td>
-                    <td class="p-3 font-bold">${subSize - 2}</td>
-                `;
-                tbody.appendChild(tr);
-            }
-        }
-
-        function initCidrSelect() {
-            const select = document.getElementById('cidrSelect');
-            if (!select) return;
-            select.innerHTML = '';
-            for (let i = 8; i <= 32; i++) {
-                const opt = document.createElement('option');
-                opt.value = i;
-                opt.innerText = `/${i} (${longToIp((~0 << (32 - i)) >>> 0)})`;
-                if (i === 24) opt.selected = true;
-                select.appendChild(opt);
-            }
-        }
-
-        // ABA 2: CALCULADORA VLSM REAL & SUPERNETTING
-        function addVlsmSector() {
-            const container = document.getElementById('vlsmSectorsContainer');
-            if (!container) return;
-            const sectorCount = container.children.length + 1;
-            
-            const div = document.createElement('div');
-            div.className = 'flex items-center gap-2 vlsm-sector-row';
-            div.innerHTML = `
-                <input type="text" placeholder="Nome do Setor (ex: RH)" value="Setor ${sectorCount}" class="vlsm-name flex-1 p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                <input type="number" placeholder="Hosts" value="20" min="1" class="vlsm-hosts w-28 p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                <button onclick="this.parentElement.remove()" class="px-2.5 py-2.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold border border-red-800">
-                    ✕
-                </button>
-            `;
-            container.appendChild(div);
-        }
-
-        function calculateVlsm() {
-            const baseInputEl = document.getElementById('vlsmBaseInput');
-            const errorMsg = document.getElementById('vlsmErrorMsg');
-            const tbody = document.getElementById('vlsmTableBody');
-            
-            if (!baseInputEl || !tbody) return;
-
-            const baseInput = baseInputEl.value.trim();
-            const parts = baseInput.split('/');
-            
-            if (parts.length !== 2 || !isValidIp(parts[0]) || isNaN(parts[1])) {
-                if (errorMsg) errorMsg.classList.remove('hidden');
-                return;
-            }
-            if (errorMsg) errorMsg.classList.add('hidden');
-
-            const baseCidr = parseInt(parts[1], 10);
-            let currentNetLong = ipToLong(parts[0]);
-
-            const rows = document.querySelectorAll('.vlsm-sector-row');
-            let sectors = [];
-            rows.forEach(r => {
-                const name = r.querySelector('.vlsm-name')?.value.trim() || 'Setor';
-                const hosts = parseInt(r.querySelector('.vlsm-hosts')?.value, 10) || 0;
-                if (hosts > 0) sectors.push({ name, hosts });
-            });
-
-            // Ordena do maior para o menor número de hosts
-            sectors.sort((a, b) => b.hosts - a.hosts);
-
-            tbody.innerHTML = '';
-            sectors.forEach((sec, idx) => {
-                let h = 1;
-                while (Math.pow(2, h) - 2 < sec.hosts) h++;
-                
-                const cidr = 32 - h;
-                const totalBlockIPs = Math.pow(2, h);
-                const maskStr = longToIp((~0 << h) >>> 0);
-                
-                const netIp = longToIp(currentNetLong);
-                const bcastLong = (currentNetLong + totalBlockIPs - 1) >>> 0;
-                const bcastIp = longToIp(bcastLong);
-                const firstIp = longToIp(currentNetLong + 1);
-                const lastIp = longToIp(bcastLong - 1);
-                const usable = totalBlockIPs - 2;
-
-                const tr = document.createElement('tr');
-                tr.className = 'border-b border-[#2d3540] hover:bg-[#4b538b]/10 font-mono text-xs';
-                tr.innerHTML = `
-                    <td class="p-3 font-bold text-[#f7a21b] font-sans">${sec.name}</td>
-                    <td class="p-3">${sec.hosts} hosts</td>
-                    <td class="p-3 font-bold text-sky-400">${netIp} /${cidr}</td>
-                    <td class="p-3">${maskStr}</td>
-                    <td class="p-3 text-emerald-400">${firstIp} - ${lastIp}</td>
-                    <td class="p-3 text-amber-400">${bcastIp}</td>
-                    <td class="p-3 font-bold">${usable}</td>
-                `;
-                tbody.appendChild(tr);
-
-                currentNetLong = (bcastLong + 1) >>> 0;
-            });
-        }
-
-        function calculateSupernet() {
-            const inputEl = document.getElementById('supernetInput');
-            const resultBox = document.getElementById('supernetResult');
-            
-            if (!inputEl || !resultBox) return;
-
-            const lines = inputEl.value.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            if (lines.length < 2) {
-                resultBox.innerHTML = '<span class="text-red-400 font-bold">Insira pelo menos 2 endereços de rede válidos.</span>';
-                return;
-            }
-
-            let validIps = [];
-            for (let l of lines) {
-                const ip = l.split('/')[0].trim();
-                if (!isValidIp(ip)) {
-                    resultBox.innerHTML = `<span class="text-red-400 font-bold">Endereço IP inválido detectado: ${l}</span>`;
-                    return;
-                }
-                validIps.push(ipToLong(ip));
-            }
-
-            let commonBits = 0;
-            for (let bit = 31; bit >= 0; bit--) {
-                const firstBitVal = (validIps[0] >> bit) & 1;
-                let allMatch = true;
-                for (let i = 1; i < validIps.length; i++) {
-                    if (((validIps[i] >> bit) & 1) !== firstBitVal) {
-                        allMatch = false;
-                        break;
-                    }
-                }
-                if (allMatch) commonBits++;
-                else break;
-            }
-
-            const cidr = commonBits;
-            const maskLong = cidr === 0 ? 0 : (~0 << (32 - cidr)) >>> 0;
-            const supernetLong = (validIps[0] & maskLong) >>> 0;
-
-            resultBox.innerHTML = `
-                <div class="space-y-1">
-                    <div><strong>Rota Sumarizada (Supernet):</strong> <span class="text-emerald-400 font-mono font-bold">${longToIp(supernetLong)} /${cidr}</span></div>
-                    <div><strong>Máscara Decimal:</strong> <span class="text-[#f7a21b] font-mono">${longToIp(maskLong)}</span></div>
-                    <div><strong>Bits em Comum:</strong> ${cidr} bits</div>
-                </div>
-            `;
-        }
-
-        // ABA 3: IPV6 & EUI-64
-        function processIPv6() {
-            const inputEl = document.getElementById('ipv6Input');
-            const resultBox = document.getElementById('ipv6Result');
-            if (!inputEl || !resultBox) return;
-
-            const input = inputEl.value.trim().toLowerCase();
-            if (!input.includes(':')) {
-                resultBox.innerHTML = '<span class="text-red-400 font-bold">Endereço IPv6 inválido.</span>';
-                return;
-            }
-
-            let fullAddress = '';
-            try {
-                if (input.includes('::')) {
-                    const halves = input.split('::');
-                    const leftBlocks = halves[0] ? halves[0].split(':') : [];
-                    const rightBlocks = halves[1] ? halves[1].split(':') : [];
-                    const missing = 8 - (leftBlocks.length + rightBlocks.length);
-                    const filled = [...leftBlocks, ...Array(missing).fill('0000'), ...rightBlocks];
-                    fullAddress = filled.map(b => b.padStart(4, '0')).join(':');
-                } else {
-                    fullAddress = input.split(':').map(b => b.padStart(4, '0')).join(':');
-                }
-            } catch(e) {
-                resultBox.innerHTML = '<span class="text-red-400 font-bold">Erro ao processar sintaxe do IPv6.</span>';
-                return;
-            }
-
-            let scope = "Global Unicast (Roteável na Internet IPv6)";
-            if (fullAddress.startsWith('fe80')) scope = "Link-Local (Comunicação no mesmo enlace local)";
-            else if (fullAddress.startsWith('fc') || fullAddress.startsWith('fd')) scope = "Unique Local (Rede Privada IPv6 - ULA)";
-            else if (fullAddress.startsWith('ff')) scope = "Multicast IPv6";
-            else if (fullAddress === '0000:0000:0000:0000:0000:0000:0000:0001') scope = "Loopback (::1)";
-
-            resultBox.innerHTML = `
-                <div class="space-y-2 text-xs font-mono">
-                    <div><strong class="text-gray-400">Expandido (32 Hex):</strong> <span class="text-[#f7a21b] font-bold">${fullAddress}</span></div>
-                    <div><strong class="text-gray-400">Comprimido (RFC 5952):</strong> <span class="text-emerald-400 font-bold">${input}</span></div>
-                    <div><strong class="text-gray-400">Escopo Identificado:</strong> <span class="text-sky-400 font-bold font-sans">${scope}</span></div>
-                </div>
-            `;
-        }
-
-        function calculateEui64() {
-            const macEl = document.getElementById('euiMacInput');
-            const prefixEl = document.getElementById('euiPrefixInput');
-            const errEl = document.getElementById('euiErrorMsg');
-            const resBox = document.getElementById('euiResult');
-
-            if (!macEl || !prefixEl || !errEl || !resBox) return;
-
-            const macClean = macEl.value.replace(/[^a-fA-F0-9]/g, '');
-            if (macClean.length !== 12) {
-                errEl.classList.remove('hidden');
-                return;
-            }
-            errEl.classList.add('hidden');
-
-            let firstByte = parseInt(macClean.substring(0, 2), 16);
-            firstByte = firstByte ^ 0x02; // Inverte o 7º bit (Universal/Local)
-            const firstByteHex = firstByte.toString(16).padStart(2, '0');
-
-            const eui64Part = `${firstByteHex}${macClean.substring(2, 6)}:ff:fe${macClean.substring(6, 10)}:${macClean.substring(10, 12)}`;
-            const prefix = prefixEl.value.trim().replace(/\/$/, '');
-
-            resBox.innerHTML = `
-                <div class="space-y-2 text-xs font-mono">
-                    <div><strong class="text-gray-400">Interface ID (EUI-64):</strong> <span class="text-[#f7a21b] font-bold">${eui64Part}</span></div>
-                    <div><strong class="text-gray-400">Endereço IPv6 Completo:</strong> <span class="text-emerald-400 font-bold">${prefix}:${eui64Part}/64</span></div>
-                </div>
-            `;
-        }
-
-        // ABA 4: DESEMPENHO, TRÁFEGO & ERLANG-B
-        function calculateLatency() {
-            const packetBits = (parseFloat(document.getElementById('latPacketSize')?.value || 0) * 8);
-            const bandwidthBps = parseFloat(document.getElementById('latBandwidth')?.value || 1);
-            const distanceKm = parseFloat(document.getElementById('latDistance')?.value || 0);
-            const medium = document.getElementById('latMedium')?.value || 'fiber';
-
-            const procDelayMs = parseFloat(document.getElementById('latProcDelay')?.value || 0);
-            const queueDelayMs = parseFloat(document.getElementById('latQueueDelay')?.value || 0);
-
-            const speedProp = medium === 'fiber' ? 200000 : 300000; // km/s
-            
-            const transDelayMs = (packetBits / bandwidthBps) * 1000;
-            const propDelayMs = (distanceKm / speedProp) * 1000;
-
-            const totalLatencyMs = transDelayMs + propDelayMs + procDelayMs + queueDelayMs;
-
-            const resEl = document.getElementById('latencyResult');
-            if (resEl) {
-                resEl.innerHTML = `
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-center">
-                        <div class="bg-nbCodeBg p-2 rounded border border-[#2d3540]">
-                            <span class="text-gray-400 block">Transmissão</span>
-                            <span class="text-[#f7a21b] font-mono font-bold">${transDelayMs.toFixed(3)} ms</span>
-                        </div>
-                        <div class="bg-nbCodeBg p-2 rounded border border-[#2d3540]">
-                            <span class="text-gray-400 block">Propagação</span>
-                            <span class="text-sky-400 font-mono font-bold">${propDelayMs.toFixed(3)} ms</span>
-                        </div>
-                        <div class="bg-nbCodeBg p-2 rounded border border-[#2d3540]">
-                            <span class="text-gray-400 block">Fila / Proc.</span>
-                            <span class="text-amber-400 font-mono font-bold">${(procDelayMs + queueDelayMs).toFixed(3)} ms</span>
-                        </div>
-                        <div class="bg-nbCodeBg p-2 rounded border border-[#2d3540]">
-                            <span class="text-gray-400 block font-bold">Latência Total (Ida)</span>
-                            <span class="text-emerald-400 font-mono font-bold">${totalLatencyMs.toFixed(3)} ms</span>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function calculateBdp() {
-            const fileSizeMB = parseFloat(document.getElementById('bdpFileSize')?.value || 0);
-            const bwMbps = parseFloat(document.getElementById('bdpBandwidth')?.value || 0);
-            const rttMs = parseFloat(document.getElementById('bdpRtt')?.value || 0);
-            const overheadPct = parseFloat(document.getElementById('bdpOverhead')?.value || 0);
-
-            const fileSizeBytes = fileSizeMB * 1024 * 1024;
-            const effectiveBwMbps = bwMbps * (1 - (overheadPct / 100));
-            const effectiveBwBps = (effectiveBwMbps * 1000000) / 8; // Bytes por segundo
-
-            const transferTimeSec = effectiveBwBps > 0 ? (fileSizeBytes / effectiveBwBps) : 0;
-            const bdpBits = (bwMbps * 1000000) * (rttMs / 1000);
-            const bdpBytes = bdpBits / 8;
-
-            const resEl = document.getElementById('bdpResult');
-            if (resEl) {
-                resEl.innerHTML = `
-                    <div class="space-y-2 text-xs font-mono">
-                        <div><strong class="text-gray-400">Vazão Útil Real (Descontando Overhead):</strong> <span class="text-emerald-400 font-bold">${effectiveBwMbps.toFixed(2)} Mbps</span></div>
-                        <div><strong class="text-gray-400">Tempo Estimado de Transferência:</strong> <span class="text-[#f7a21b] font-bold">${transferTimeSec.toFixed(2)} segundos</span></div>
-                        <div><strong class="text-gray-400">Volume em Trânsito (BDP):</strong> <span class="text-sky-400 font-bold">${(bdpBits / 1000).toLocaleString()} Kbits (${(bdpBytes / 1024).toFixed(2)} KB)</span></div>
-                        <div><strong class="text-gray-400">Tamanho Ideal de Janela TCP (Buffer):</strong> <span class="text-amber-400 font-bold">≥ ${(bdpBytes / 1024).toFixed(2)} KB</span></div>
-                    </div>
-                `;
-            }
-        }
-
-        function calculateErlang() {
-            const lambda = parseFloat(document.getElementById('erlangLambda')?.value || 0);
-            const durationSec = parseFloat(document.getElementById('erlangDuration')?.value || 0);
-            const channels = parseInt(document.getElementById('erlangChannels')?.value || 1, 10);
-
-            const durationHours = durationSec / 3600;
-            const A = lambda * durationHours;
-
-            let B = 1.0;
-            for (let i = 1; i <= channels; i++) {
-                B = (A * B) / (i + (A * B));
-            }
-
-            const carriedTraffic = A * (1 - B);
-            const resEl = document.getElementById('erlangResult');
-            if (resEl) {
-                resEl.innerHTML = `
-                    <div class="space-y-2 text-xs font-mono">
-                        <div><strong class="text-gray-400">Intensidade de Tráfego Oferecido (A):</strong> <span class="text-[#f7a21b] font-bold">${A.toFixed(3)} Erlangs</span></div>
-                        <div><strong class="text-gray-400">Probabilidade de Bloqueio (Erlang-B):</strong> <span class="text-emerald-400 font-bold">${(B * 100).toFixed(3)}%</span></div>
-                        <div><strong class="text-gray-400">Tráfego Escoado Efetivo:</strong> <span class="text-sky-400 font-bold">${carriedTraffic.toFixed(3)} Erlangs</span></div>
-                    </div>
-                `;
-            }
-        }
-
-        // ABA 5: FÍSICA, ENLACE, CRC & OSPF
-        function calculateCapacity() {
-            const bw = parseFloat(document.getElementById('capBw')?.value || 0);
-            const levels = parseInt(document.getElementById('capLevels')?.value || 2, 10);
-            const snrDb = parseFloat(document.getElementById('capSnr')?.value || 0);
-
-            const nyquistBps = 2 * bw * Math.log2(levels);
-            const snrLinear = Math.pow(10, snrDb / 10);
-            const shannonBps = bw * Math.log2(1 + snrLinear);
-
-            const resEl = document.getElementById('capacityResult');
-            if (resEl) {
-                resEl.innerHTML = `
-                    <div class="space-y-2 text-xs font-mono">
-                        <div><strong class="text-gray-400">Limite Sem Ruído (Teorema de Nyquist):</strong> <span class="text-[#f7a21b] font-bold">${(nyquistBps / 1000000).toFixed(2)} Mbps</span></div>
-                        <div><strong class="text-gray-400">Capacidade Real com Ruído (Shannon-Hartley):</strong> <span class="text-emerald-400 font-bold">${(shannonBps / 1000000).toFixed(2)} Mbps</span></div>
-                    </div>
-                `;
-            }
-        }
-
-        function calculateLinkBudget() {
-            const txPower = parseFloat(document.getElementById('lbTxPower')?.value || 0);
-            const txGain = parseFloat(document.getElementById('lbTxGain')?.value || 0);
-            const rxGain = parseFloat(document.getElementById('lbRxGain')?.value || 0);
-            const losses = parseFloat(document.getElementById('lbLosses')?.value || 0);
-            const rxSens = parseFloat(document.getElementById('lbRxSens')?.value || -85);
-
-            const rxPower = txPower + txGain + rxGain - losses;
-            const margin = rxPower - rxSens;
-
-            let status = "Sinal Forte e Estável";
-            let statusColor = "text-emerald-400";
-            if (margin < 0) {
-                status = "Enlace inoperante (Sinal abaixo da sensibilidade)";
-                statusColor = "text-red-400";
-            } else if (margin < 10) {
-                status = "Margem Crítica (Risco de queda por desvanecimento)";
-                statusColor = "text-amber-400";
-            }
-
-            const resEl = document.getElementById('linkBudgetResult');
-            if (resEl) {
-                resEl.innerHTML = `
-                    <div class="space-y-2 text-xs font-mono">
-                        <div><strong class="text-gray-400">Potência Recebida no Receptor (RX):</strong> <span class="text-emerald-400 font-bold">${rxPower.toFixed(2)} dBm</span></div>
-                        <div><strong class="text-gray-400">Margem de Fading (Desvanecimento):</strong> <span class="text-sky-400 font-bold">${margin.toFixed(2)} dB</span></div>
-                        <div><strong class="text-gray-400">Diagnóstico do Enlace:</strong> <span class="${statusColor} font-bold font-sans">${status}</span></div>
-                    </div>
-                `;
-            }
-        }
-
-        function calculateCrc() {
-            const dataStr = document.getElementById('crcDataInput')?.value.trim() || '1101001110';
-            const polyStr = document.getElementById('crcPolyInput')?.value.trim() || '1011';
-
-            if (!/^[01]+$/.test(dataStr) || !/^[01]+$/.test(polyStr)) {
-                const resEl = document.getElementById('crcResult');
-                if (resEl) resEl.innerHTML = '<span class="text-red-400 font-bold">Insira apenas dígitos binários (0 e 1).</span>';
-                return;
-            }
-
-            const pLen = polyStr.length;
-            let appendedData = dataStr + '0'.repeat(pLen - 1);
-            let dividendArr = appendedData.split('').map(Number);
-            const polyArr = polyStr.split('').map(Number);
-
-            for (let i = 0; i <= dividendArr.length - pLen; i++) {
-                if (dividendArr[i] === 1) {
-                    for (let j = 0; j < pLen; j++) {
-                        dividendArr[i + j] ^= polyArr[j];
-                    }
-                }
-            }
-
-            const fcs = dividendArr.slice(dividendArr.length - (pLen - 1)).join('');
-            const transmittedFrame = dataStr + fcs;
-
-            const resEl = document.getElementById('crcResult');
-            if (resEl) {
-                resEl.innerHTML = `
-                    <div class="space-y-2 text-xs font-mono">
-                        <div><strong class="text-gray-400">Quadro de Dados Original:</strong> <span class="text-[#f7a21b] font-bold">${dataStr}</span></div>
-                        <div><strong class="text-gray-400">Resto CRC / FCS Calculado (${pLen - 1} bits):</strong> <span class="text-emerald-400 font-bold">${fcs}</span></div>
-                        <div><strong class="text-gray-400">Quadro Final Transmitido no Enlace:</strong> <span class="text-sky-400 font-bold">${transmittedFrame}</span></div>
-                    </div>
-                `;
-            }
-        }
-
-        function calculateFer() {
-            const ber = parseFloat(document.getElementById('ferBerInput')?.value || 0.00001);
-            const frameBits = parseInt(document.getElementById('ferBitsInput')?.value || 12000, 10);
-
-            const fer = 1 - Math.pow(1 - ber, frameBits);
-            const resEl = document.getElementById('ferResult');
-            if (resEl) {
-                resEl.innerHTML = `
-                    <div class="space-y-2 text-xs font-mono">
-                        <div><strong class="text-gray-400">Taxa Estimada de Erro de Quadro (FER):</strong> <span class="text-amber-400 font-bold">${(fer * 100).toFixed(4)}%</span></div>
-                        <div><strong class="text-gray-400">Probabilidade de Entrega Sem Erros:</strong> <span class="text-emerald-400 font-bold">${((1 - fer) * 100).toFixed(4)}%</span></div>
-                    </div>
-                `;
-            }
-        }
-
-        function calculateOspfCost() {
-            const refBw = parseFloat(document.getElementById('ospfRefBw')?.value || 100);
-            const ifBw = parseFloat(document.getElementById('ospfIfBw')?.value || 10);
-
-            const cost = Math.max(1, Math.floor((refBw * 1000000) / (ifBw * 1000000)));
-
-            let alertText = "";
-            if (ifBw >= 1000 && refBw === 100) {
-                alertText = "<span class='text-amber-400 font-bold block mt-1'>⚠️ Alerta Cisco: interfaces Gigabit/10G resultam em custo 1 com Banda de Referência de 100Mbps. Ajuste auto-cost reference-bandwidth!</span>";
-            }
-
-            const resEl = document.getElementById('ospfResult');
-            if (resEl) {
-                resEl.innerHTML = `
-                    <div class="space-y-2 text-xs font-mono">
-                        <div><strong class="text-gray-400">Métrica de Custo OSPF:</strong> <span class="text-emerald-400 font-bold text-lg">${cost}</span></div>
-                        ${alertText}
-                    </div>
-                `;
-            }
-        }
-
-        // ATALHO GLOBAL TECLA ENTER & INICIALIZAÇÃO
-        window.onload = function() {
-            initCidrSelect();
-            calculateSubnet();
-            
-            const ipInputEl = document.getElementById('ipInput');
-            const cidrSelectEl = document.getElementById('cidrSelect');
-            
-            if (ipInputEl) ipInputEl.addEventListener('input', calculateSubnet);
-            if (cidrSelectEl) cidrSelectEl.addEventListener('change', calculateSubnet);
-
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter' && event.target.tagName !== 'SUMMARY' && event.target.tagName !== 'BUTTON' && event.target.tagName !== 'TEXTAREA') {
-                    const activeTab = document.querySelector('.tab-content:not(.hidden)');
-                    if (activeTab) {
-                        const id = activeTab.id;
-                        if (id === 'tab-ipv4') calculateSubnet();
-                        else if (id === 'tab-vlsm') { calculateVlsm(); calculateSupernet(); }
-                        else if (id === 'tab-ipv6') { processIPv6(); calculateEui64(); }
-                        else if (id === 'tab-perf') { calculateLatency(); calculateBdp(); calculateErlang(); }
-                        else if (id === 'tab-phys') { calculateCapacity(); calculateLinkBudget(); calculateCrc(); calculateFer(); calculateOspfCost(); }
-                    }
-                }
-            });
-        };
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Definitivo de Sub-redes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117; --bg-elevated: #161b22; --bg-card: #1c2229; --bg-subtle: #15191d;
+  --border: #30363d; --border-subtle: #21262d;
+  --text: #e6edf3; --text-muted: #8b949e; --text-dim: #6e7681;
+  --primary: #f7a21b; --primary-hover: #ffb547; --primary-ring: rgba(247, 162, 27, 0.4);
+  --network: #3fb950; --host: #58a6ff; --broadcast: #db6dc4; --loopback: #56d4dd;
+  --danger: #f85149; --warning: #d29922;
+  --radius-sm: 6px; --radius: 10px; --radius-lg: 14px;
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.4), 0 16px 40px rgba(0,0,0,0.5);
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Fira Code', 'SF Mono', Consolas, monospace;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans); background: var(--bg); color: var(--text);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  padding: 16px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+@media (min-width: 768px) { body { padding: 32px; } }
+.skip-link { position: fixed; top: -100px; left: 16px; background: var(--primary); color: var(--bg);
+  padding: 8px 16px; border-radius: var(--radius); font-weight: 700; z-index: 1000;
+  text-decoration: none; transition: top 0.2s; }
+.skip-link:focus { top: 16px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.app-header { text-align: center; width: 100%; max-width: 1000px; margin-bottom: 24px; }
+.app-title { font-size: clamp(1.75rem, 4.5vw, 2.75rem); font-weight: 800; letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--primary), #e45635 60%, #d60257);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; padding: 8px 0; }
+.app-subtitle { color: var(--text-muted); font-size: 0.875rem; margin-top: 4px; }
+.app { width: 100%; max-width: 1000px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 20px; box-shadow: var(--shadow-lg);
+  display: flex; flex-direction: column; gap: 18px; }
+@media (min-width: 768px) { .app { padding: 28px; } }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 14px; font-family: inherit; font-size: 0.875rem; font-weight: 600;
+  border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+  white-space: nowrap; text-decoration: none; }
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--primary-ring); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: var(--primary); color: var(--bg); border-color: var(--primary); }
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-primary:active:not(:disabled) { transform: translateY(1px); }
+.btn-secondary { background: transparent; color: var(--primary); border-color: var(--primary); }
+.btn-secondary:hover:not(:disabled) { background: rgba(247, 162, 27, 0.1); }
+.btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-ghost:hover:not(:disabled) { background: var(--bg-subtle); border-color: var(--text-muted); }
+.btn-danger-ghost { background: transparent; color: var(--danger); border-color: rgba(248, 81, 73, 0.3); }
+.btn-danger-ghost:hover:not(:disabled) { background: rgba(248, 81, 73, 0.1); border-color: var(--danger); }
+.toolbar { display: flex; flex-direction: column; gap: 10px; align-items: center;
+  padding: 14px; background: var(--bg-subtle);
+  border-radius: var(--radius); border: 1px solid var(--border-subtle); }
+.toolbar-header { display: flex; justify-content: space-between; align-items: baseline;
+  width: 100%; max-width: 500px; gap: 8px; margin-bottom: 2px; }
+.toolbar-title { font-weight: 700; color: var(--text); font-size: 0.9rem; }
+.toolbar-hint { color: var(--text-muted); font-size: 0.72rem; font-family: var(--font-mono); }
+.input-group { display: flex; gap: 8px; width: 100%; max-width: 500px; }
+.input-wrapper { flex: 1; position: relative; min-width: 0; }
+.input-wrapper #input-ip {
+  width: 100%; padding: 9px 34px 9px 12px;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: var(--font-mono); font-size: 0.9rem;
+  text-align: center; font-weight: 600;
+  transition: border-color 0.15s, box-shadow 0.15s; }
+#input-ip:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-ring); }
+#input-ip.invalid { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.2); }
+#input-ip.warned { border-color: var(--warning); box-shadow: 0 0 0 3px rgba(210, 153, 34, 0.2); }
+.clear-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 22px; height: 22px; border: none; background: transparent;
+  color: var(--text-muted); font-size: 1.3rem; line-height: 1;
+  cursor: pointer; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.15s, background 0.15s, color 0.15s; }
+.input-wrapper.has-value .clear-btn { opacity: 1; pointer-events: auto; }
+.clear-btn:hover { background: var(--bg-card); color: var(--text); }
+.clear-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--primary-ring); opacity: 1; }
+.error-block { display: flex; flex-direction: column; gap: 4px; width: 100%; align-items: center; }
+.input-error { color: var(--danger); font-size: 0.8rem; min-height: 1.2em; text-align: center; }
+.input-error:empty { min-height: 0; }
+.input-hint {
+  background: rgba(248, 81, 73, 0.08); border: 1px solid rgba(248, 81, 73, 0.3);
+  border-radius: var(--radius-sm); padding: 8px 12px;
+  font-size: 0.8rem; color: var(--danger); text-align: center; line-height: 1.5;
+  max-width: 500px;
+}
+.input-hint[hidden] { display: none; }
+.override-btn {
+  margin-top: 2px; font-size: 0.75rem;
+  background: transparent; color: var(--text-muted);
+  border: 1px dashed var(--border);
+  padding: 4px 10px; border-radius: var(--radius-sm);
+  cursor: pointer; font-family: inherit;
+  transition: all 0.15s;
+}
+.override-btn:hover { color: var(--warning); border-color: var(--warning); }
+.override-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--primary-ring); }
+.override-btn[hidden] { display: none; }
+.presets, .examples { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.presets-label { color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+.preset { padding: 4px 10px; background: var(--bg-elevated);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text); font-family: var(--font-mono);
+  font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.preset:hover { background: var(--bg-card); border-color: var(--primary); color: var(--primary); }
+.preset:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--primary-ring); }
+.example { padding: 4px 10px; background: transparent;
+  border: 1px dashed var(--border); border-radius: var(--radius-sm);
+  color: var(--text); font-family: var(--font-mono);
+  font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.example:hover { border-style: solid; border-color: var(--primary); color: var(--primary); background: var(--bg-elevated); }
+.example:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--primary-ring); }
+.classes-panel { width: 100%; max-width: 500px; background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 0.8rem; }
+.classes-panel summary { padding: 8px 12px; cursor: pointer; font-weight: 600; color: var(--text-muted);
+  list-style: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+.classes-panel summary:hover { color: var(--text); }
+.classes-panel summary::-webkit-details-marker { display: none; }
+.classes-panel summary::before { content: '▸'; display: inline-block; transition: transform 0.2s; color: var(--primary); }
+.classes-panel[open] summary::before { content: '▾'; }
+.classes-panel[open] summary { border-bottom: 1px solid var(--border-subtle); }
+.classes-list { padding: 4px 0; }
+.class-row { display: grid; grid-template-columns: 60px 1fr auto; gap: 10px; align-items: center;
+  padding: 6px 12px; font-size: 0.75rem; color: var(--text-muted); }
+.class-row + .class-row { border-top: 1px solid var(--border-subtle); }
+.class-badge { display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 50%;
+  font-family: var(--font-mono); font-weight: 800; font-size: 0.85rem;
+  background: var(--bg-subtle); border: 2px solid var(--border); color: var(--text); }
+.class-badge--a { border-color: var(--network); color: var(--network); }
+.class-badge--b { border-color: var(--host); color: var(--host); }
+.class-badge--c { border-color: var(--primary); color: var(--primary); }
+.class-badge--d { border-color: var(--danger); color: var(--danger); }
+.class-badge--e { border-color: var(--warning); color: var(--warning); }
+.class-badge--l { border-color: var(--loopback); color: var(--loopback); }
+.class-info { display: flex; flex-direction: column; gap: 1px; }
+.class-range { font-family: var(--font-mono); color: var(--text); font-size: 0.78rem; }
+.class-use { font-size: 0.7rem; }
+.class-status { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+.class-status--ok { color: var(--network); }
+.class-status--no { color: var(--danger); }
+.nav { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.stepper { display: flex; list-style: none; gap: 4px; justify-content: space-between; padding: 4px 0; overflow-x: auto; }
+.step-dot { flex: 1; min-width: 40px; padding: 6px 2px; background: transparent; border: none;
+  color: var(--text-dim); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm); }
+.step-dot::before { content: attr(data-num);
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg-elevated); border: 2px solid var(--border);
+  color: var(--text-dim); font-family: var(--font-mono);
+  font-size: 0.75rem; font-weight: 700; transition: all 0.2s; }
+.step-dot.done { color: var(--network); }
+.step-dot.done::before { content: '✓'; background: var(--network); border-color: var(--network); color: var(--bg); }
+.step-dot.active { color: var(--primary); }
+.step-dot.active::before { background: var(--primary); border-color: var(--primary); color: var(--bg); box-shadow: 0 0 0 4px var(--primary-ring); }
+.step-dot:hover::before { border-color: var(--text-muted); }
+.step-dot.active:hover::before { border-color: var(--primary); }
+.step-dot:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--primary-ring); }
+.step-meta { display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.8rem; gap: 12px; flex-wrap: wrap; }
+#step-counter { color: var(--network); font-weight: 700; font-family: var(--font-mono); }
+#step-title { color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.progress { height: 4px; background: var(--bg-subtle); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--primary); transition: width 0.4s ease; width: 12.5%; }
+
+/* NOTICES */
+.notice { border-radius: var(--radius); padding: 10px 14px;
+  font-size: 0.85rem; display: flex; gap: 10px; align-items: flex-start; line-height: 1.55; }
+.notice[hidden] { display: none; }
+.notice-icon { flex-shrink: 0; font-weight: 700; font-size: 1.05rem; }
+.notice-body { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+.notice-line { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.notice-tag { font-family: var(--font-mono); font-weight: 700; font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 1px 6px; border-radius: 3px; flex-shrink: 0;
+  color: var(--text-muted); background: var(--bg-subtle); }
+
+/* Cor por severidade DO ITEM (não do container) */
+.notice-tag[data-severity="info"] { background: rgba(88, 166, 255, 0.15); color: var(--host); }
+.notice-tag[data-severity="warning"] { background: rgba(210, 153, 34, 0.18); color: var(--warning); }
+.notice-tag[data-severity="error"] { background: rgba(248, 81, 73, 0.18); color: var(--danger); }
+
+.notice--info { background: rgba(88, 166, 255, 0.08); border: 1px solid rgba(88, 166, 255, 0.3); color: var(--host); }
+.notice--warning { background: rgba(210, 153, 34, 0.1); border: 1px solid rgba(210, 153, 34, 0.4); color: var(--warning); }
+.notice--error { background: rgba(248, 81, 73, 0.1); border: 1px solid rgba(248, 81, 73, 0.4); color: var(--danger); }
+
+.step-content { display: flex; flex-direction: column; gap: 20px; }
+.step-heading { font-size: 1.125rem; font-weight: 700; color: var(--text); text-align: center; }
+.step-heading .step-num { color: var(--primary); font-family: var(--font-mono); }
+.explain-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 768px) { .explain-grid { grid-template-columns: 1fr 1fr; } }
+.explain-card { background: var(--bg-subtle); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius); padding: 14px 16px;
+  font-size: 0.875rem; line-height: 1.6; color: var(--text); }
+.explain-title { color: var(--primary); font-family: var(--font-mono); font-weight: 700; display: block; margin-bottom: 4px; }
+.value-card { background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+.value-card--network { border: 2px solid var(--network); }
+.value-card--broadcast { border: 2px solid var(--broadcast); }
+.value-card--primary { border: 2px solid var(--primary); }
+.value-label { color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; display: block; margin-bottom: 6px; }
+.value-code { font-family: var(--font-mono); font-size: 1.75rem; font-weight: 800; word-break: break-all; }
+.value-code--network { color: var(--network); }
+.value-code--broadcast { color: var(--broadcast); }
+.value-code--primary { color: var(--primary); }
+.value-code--ip { color: var(--text); }
+.copy-btn { display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; margin-left: 6px; background: transparent;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text-muted); font-size: 0.7rem;
+  font-family: var(--font-sans); font-weight: 600;
+  cursor: pointer; vertical-align: middle; transition: all 0.15s; }
+.copy-btn:hover { color: var(--primary); border-color: var(--primary); }
+.copy-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--primary-ring); }
+
+/* CLASS PILL — data-class em vez de classe por letra */
+.class-pill { display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;
+  background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.04em;
+  margin-top: 8px; font-family: var(--font-mono); }
+.class-pill[data-class="A"] { border-color: var(--network); color: var(--network); }
+.class-pill[data-class="B"] { border-color: var(--host); color: var(--host); }
+.class-pill[data-class="C"] { border-color: var(--primary); color: var(--primary); }
+.class-pill[data-class="D"] { border-color: var(--danger); color: var(--danger); }
+.class-pill[data-class="E"] { border-color: var(--warning); color: var(--warning); }
+.class-pill[data-class="L"] { border-color: var(--loopback); color: var(--loopback); }
+.class-pill[data-class="—"] { border-color: var(--text-muted); color: var(--text-muted); }
+
+.octet-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.octet { background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 6px; text-align: center; transition: all 0.2s; }
+.octet.is-active { border-color: var(--primary); background: rgba(247, 162, 27, 0.08); box-shadow: 0 0 0 3px var(--primary-ring); }
+.octet-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); display: block; margin-bottom: 4px; }
+.octet-value { font-family: var(--font-mono); font-weight: 700; font-size: 1rem; color: var(--host); }
+.octet.is-active .octet-value { color: var(--primary); }
+.octet-cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 640px) { .octet-cards { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) { .octet-cards { grid-template-columns: repeat(4, 1fr); } }
+.bin-card { background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: center; }
+.bin-card.is-active { border-color: var(--primary); }
+.bin-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
+.bin-weights, .bin-bits { display: grid; grid-template-columns: repeat(8, 1fr); gap: 1px; font-family: var(--font-mono); text-align: center; }
+.bin-weights { font-size: 0.6rem; color: var(--text-dim); margin-bottom: 4px; }
+.bin-bits { font-size: 0.85rem; color: var(--network); font-weight: 700; }
+.bin-decimal { font-family: var(--font-mono); font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 6px 0; }
+.bits-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 640px) { .bits-grid { grid-template-columns: 1fr 1fr; } }
+.bits-card { background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+.bits-card--network { border-color: var(--network); }
+.bits-card--host { border-color: var(--host); }
+.bits-number { font-family: var(--font-mono); font-size: 2.5rem; font-weight: 800; margin: 4px 0; }
+.bits-number--network { color: var(--network); }
+.bits-number--host { color: var(--host); }
+.bits-caption { color: var(--text-muted); font-size: 0.8rem; }
+.formula { background: var(--bg-subtle); border: 1px solid var(--primary); border-radius: var(--radius); padding: 20px; text-align: center; font-family: var(--font-mono); }
+.formula-main { font-size: 1.25rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.formula-main .highlight { color: var(--primary); font-size: 1.75rem; font-weight: 800; }
+.formula-sub { color: var(--text-muted); font-size: 0.85rem; }
+.host-range { display: flex; flex-direction: column; gap: 8px; }
+@media (min-width: 640px) { .host-range { flex-direction: row; align-items: center; } }
+.host-box { flex: 1; background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
+.host-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+.host-value { font-family: var(--font-mono); font-size: 1.05rem; font-weight: 700; margin-top: 2px; word-break: break-all; }
+.host-value--first { color: var(--network); }
+.host-value--last { color: var(--broadcast); }
+.host-range-sep { text-align: center; color: var(--primary); font-weight: 700; padding: 4px; }
+.capacity { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-subtle); text-align: center; color: var(--text); font-size: 0.875rem; }
+.capacity strong { color: var(--network); font-family: var(--font-mono); font-size: 1.05rem; }
+.summary { background: var(--bg-subtle); border: 1px solid var(--primary); border-radius: var(--radius); padding: 18px; }
+.summary-title { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.summary-grid { display: grid; grid-template-columns: 1fr; gap: 4px; font-size: 0.85rem; }
+@media (min-width: 640px) { .summary-grid { grid-template-columns: 1fr 1fr; } }
+.summary-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); gap: 12px; }
+/* Correção #7: em 1 coluna, apenas a última perde borda; em 2 colunas, as duas últimas */
+.summary-row:last-child { border-bottom: none; }
+@media (min-width: 640px) {
+  .summary-row:last-child { border-bottom: 1px solid var(--border-subtle); }
+  .summary-row:nth-last-child(-n+2) { border-bottom: none; }
+}
+.summary-key { color: var(--text-muted); }
+.summary-val { font-family: var(--font-mono); font-weight: 600; color: var(--text); text-align: right; word-break: break-all; }
+.challenge { background: linear-gradient(135deg, rgba(247,162,27,0.06), rgba(214,2,87,0.06)); border: 1px dashed var(--primary); border-radius: var(--radius); padding: 14px 16px; font-size: 0.875rem; }
+.challenge summary { cursor: pointer; font-weight: 600; color: var(--primary); list-style: none; }
+.challenge summary::-webkit-details-marker { display: none; }
+.challenge summary::before { content: '▸ '; display: inline-block; transition: transform 0.2s; }
+.challenge[open] summary::before { content: '▾ '; }
+.challenge-answer { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle); color: var(--text); line-height: 1.6; }
+.challenge-answer strong { color: var(--network); font-family: var(--font-mono); }
+.app-footer { text-align: center; margin-top: 24px; width: 100%; max-width: 1000px; }
+.footer-main { color: var(--text-muted); font-size: 0.8rem; }
+.footer-next { color: var(--text-dim); font-size: 0.75rem; margin-top: 6px; font-family: var(--font-mono); }
+.footer-next strong { color: var(--text-muted); }
+
+/* TOAST + botão fechar */
+.toast { position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--bg-card); color: var(--text); border: 1px solid var(--network);
+  padding: 10px 14px 10px 20px; border-radius: var(--radius); box-shadow: var(--shadow-lg);
+  font-size: 0.875rem; font-weight: 600;
+  display: flex; align-items: center; gap: 10px;
+  opacity: 0; transition: transform 0.2s, opacity 0.2s;
+  pointer-events: none; z-index: 999; max-width: 90vw; }
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+.toast-close { background: transparent; border: none;
+  color: var(--text-muted); font-size: 1.2rem; cursor: pointer;
+  padding: 0 4px; border-radius: 3px; line-height: 1; flex-shrink: 0;
+  transition: color 0.15s, background 0.15s; }
+.toast-close:hover { color: var(--text); background: var(--bg-subtle); }
+.toast-close:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--primary-ring); }
+</style>
 </head>
-<body class="dark min-h-screen pb-16">
+<body>
 
-    <!-- CABEÇALHO PRINCIPAL DA PLATAFORMA (STICKY NATURAL) -->
-    <header class="bg-[#15191d] border-b border-[#4b538b] shadow-lg">
-        <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-row justify-between items-center gap-2">
-            <div class="flex items-center space-x-2 sm:space-x-3 overflow-hidden">
-                <span class="bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-black px-2 py-0.5 sm:px-3 sm:py-1 rounded text-xs sm:text-sm tracking-wider uppercase shadow-sm flex-shrink-0">SUITE</span>
-                <h1 class="text-sm sm:text-lg md:text-xl font-bold tracking-tight text-creamPale drop-shadow-sm truncate">Network Engineering & Network</h1>
-            </div>
-            <div class="flex items-center space-x-1.5 sm:space-x-2 no-print flex-shrink-0">
-                <button onclick="exportToPDF()" class="header-btn px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs shadow flex items-center gap-1" title="Exportar impressão / salvar em PDF">
-                    📄 <span class="hidden sm:inline">PDF / Imprimir</span><span class="sm:hidden">PDF</span>
-                </button>
-                <button onclick="toggleTheme()" class="header-btn px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs shadow flex items-center gap-1">
-                    <span id="themeLabel">☀️ <span class="hidden sm:inline">Modo Claro</span></span>
-                </button>
-            </div>
+<a href="#main-content" class="skip-link">Ir para o conteúdo</a>
+
+<header class="app-header">
+  <h1 class="app-title">Guia Definitivo de Sub-redes</h1>
+  <p class="app-subtitle">Simulador interativo · Passo a passo de 8 etapas</p>
+</header>
+
+<main id="main-content" class="app">
+
+  <section class="toolbar" aria-label="Cálculo de sub-rede">
+    <div class="toolbar-header">
+      <span class="toolbar-title">Calcular endereço</span>
+      <span class="toolbar-hint">IPv4 · classes A–E · /0 a /32</span>
+    </div>
+
+    <form class="input-group" id="calc-form" novalidate>
+      <label for="input-ip" class="sr-only">Endereço IP com máscara CIDR</label>
+      <div class="input-wrapper" id="input-wrapper">
+        <input type="text" id="input-ip" spellcheck="false" autocomplete="off"
+               placeholder="10.0.0.5/24"
+               aria-describedby="input-error input-hint"
+               aria-invalid="false">
+        <button type="button" class="clear-btn" id="btn-clear" aria-label="Limpar endereço" tabindex="-1">×</button>
+      </div>
+      <button type="submit" class="btn btn-primary" id="btn-calcular">Calcular</button>
+    </form>
+
+    <div class="error-block">
+      <p class="input-error" id="input-error" role="alert" aria-live="polite"></p>
+      <div class="input-hint" id="input-hint" role="alert" aria-live="polite" hidden></div>
+      <button type="button" class="override-btn" id="btn-override" hidden>⚡ Calcular mesmo assim</button>
+    </div>
+
+    <details class="classes-panel">
+      <summary>📚 Classes de IP e faixas especiais</summary>
+      <div class="classes-list">
+        <div class="class-row">
+          <span class="class-badge class-badge--a">A</span>
+          <div class="class-info">
+            <span class="class-range">1.0.0.0 – 126.255.255.255</span>
+            <span class="class-use">Redes grandes · máscara padrão /8</span>
+          </div>
+          <span class="class-status class-status--ok">Host ✓</span>
         </div>
-
-        <!-- SISTEMA DE ABAS (NAVBAR) COM SCROLL HORIZONTAL MOBILE -->
-        <nav class="max-w-7xl mx-auto px-2 sm:px-4 pt-1 flex overflow-x-auto no-scrollbar border-t border-[#2d3540] no-print gap-1 sm:gap-2">
-            <button id="btn-tab-ipv4" onclick="switchTab('tab-ipv4')" class="tab-btn active px-3 py-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap rounded-t-md">
-                🌐 1. IPv4 & FLSM
-            </button>
-            <button id="btn-tab-vlsm" onclick="switchTab('tab-vlsm')" class="tab-btn px-3 py-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap rounded-t-md">
-                🔀 2. VLSM & Supernetting
-            </button>
-            <button id="btn-tab-ipv6" onclick="switchTab('tab-ipv6')" class="tab-btn px-3 py-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap rounded-t-md">
-                ⚡ 3. IPv6 & EUI-64
-            </button>
-            <button id="btn-tab-perf" onclick="switchTab('tab-perf')" class="tab-btn px-3 py-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap rounded-t-md">
-                🚀 4. Desempenho & Tráfego
-            </button>
-            <button id="btn-tab-phys" onclick="switchTab('tab-phys')" class="tab-btn px-3 py-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-gray-300 hover:text-[#f7a21b] whitespace-nowrap rounded-t-md">
-                📡 5. Física, Enlace & OSPF
-            </button>
-        </nav>
-    </header>
-
-    <!-- CONTEÚDO DAS ABAS COM ESPAÇAMENTO LIMPO E FLUIDO -->
-    <main class="max-w-7xl mx-auto px-3 sm:px-4 pb-12">
-
-        <!-- ABA 1: IPV4 & FLSM (MÓDULO COMPLETO RESTAURADO) -->
-        <div id="tab-ipv4" class="tab-content space-y-8">
-            <!-- INTRODUÇÃO DIDÁTICA E TÉCNICA -->
-            <section class="bg-nbDark p-4 sm:p-6 rounded-xl border border-[#4b538b] shadow-sm space-y-4">
-                <h2 class="text-xl sm:text-2xl font-bold text-[#f7a21b] flex items-center gap-2">
-                    📌 Arquitetura e Engenharia de Sub-redes IPv4
-                </h2>
-                <p class="text-sm sm:text-base leading-relaxed">
-                    O <strong>Subnetting (Sub-roteamento)</strong> é o processo de divisão lógica de uma rede IP física em múltiplas redes menores. Esta prática maximiza a eficiência do roteamento, reduz domínios de <i>broadcast</i>, otimiza o desempenho dos comutadores (switches) e fortalece políticas de segurança por segmentação de firewall.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                        <h3 class="font-bold text-[#f7a21b] mb-1">Total de Bits</h3>
-                        <p class="text-sm">Um endereço IPv4 é formado por <strong>32 bits</strong> organizados em 4 octetos binários de 8 bits cada.</p>
-                    </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                        <h3 class="font-bold text-sky-400 mb-1">Network ID vs Host ID</h3>
-                        <p class="text-sm">A máscara especifica os bits de roteamento (Rede) e os bits para endereçamento local (Hosts).</p>
-                    </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                        <h3 class="font-bold text-emerald-400 mb-1">Notação CIDR</h3>
-                        <p class="text-sm">O prefixo CIDR (ex: <code>/24</code>) define graficamente a quantidade contínua de bits `1` na máscara.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CALCULADORA DE SUB-REDES INTERATIVA -->
-            <section class="bg-nbDark p-4 sm:p-6 rounded-xl border border-[#4b538b] shadow-md space-y-6">
-                <div class="border-b border-[#2d3540] pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-[#f7a21b]">⚡ Calculadora Inteligente de Sub-redes IPv4</h2>
-                        <p class="text-xs sm:text-sm text-gray-400">Insira um IP e selecione a máscara para atualizar instantaneamente todos os cálculos.</p>
-                    </div>
-                    <div class="flex items-center gap-2 w-full sm:w-auto no-print">
-                        <button onclick="copySummary()" class="flex-1 sm:flex-none px-3 py-2 rounded bg-[#4b538b]/40 hover:bg-[#4b538b]/60 text-xs font-bold transition flex items-center justify-center gap-1 border border-[#4b538b]">
-                            📋 <span id="copyBtnLabel">Copiar Resumo</span>
-                        </button>
-                        <button onclick="resetCalculator()" class="flex-1 sm:flex-none px-3 py-2 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold transition flex items-center justify-center gap-1 border border-red-800">
-                            🔄 <span>Restaurar Padrão</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-                    <div>
-                        <label class="block text-xs sm:text-sm font-semibold mb-1.5 sm:mb-2">Endereço IP (IPv4):</label>
-                        <input type="text" id="ipInput" value="192.168.1.50" class="w-full p-2.5 sm:p-3 rounded-lg bg-nbCodeBg border border-[#2d3540] focus:outline-none focus:ring-2 focus:ring-[#f7a21b] font-mono text-sm sm:text-base" placeholder="Ex: 192.168.1.1">
-                        <p id="errorMsg" class="text-red-400 text-xs mt-1 hidden font-bold">Endereço IP inválido. Use a sintaxe 0.0.0.0 a 255.255.255.255.</p>
-                    </div>
-                    <div>
-                        <label class="block text-xs sm:text-sm font-semibold mb-1.5 sm:mb-2">Máscara de Rede (CIDR):</label>
-                        <select id="cidrSelect" class="w-full p-2.5 sm:p-3 rounded-lg bg-nbCodeBg border border-[#2d3540] focus:outline-none focus:ring-2 focus:ring-[#f7a21b] font-mono text-sm sm:text-base">
-                            <!-- Preenchido via JS -->
-                        </select>
-                    </div>
-                    <div class="flex items-end gap-2">
-                        <button onclick="calculateSubnet()" class="w-full py-2.5 sm:py-3 px-6 rounded-lg bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm sm:text-base">
-                            Recalcular
-                        </button>
-                    </div>
-                </div>
-
-                <!-- RESULTADOS EM CARDS -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-2 sm:pt-4">
-                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
-                        <span class="text-xs text-gray-400 uppercase font-bold">Máscara Decimal</span>
-                        <div id="resMask" class="text-base sm:text-lg font-mono font-bold text-[#f7a21b]">255.255.255.0</div>
-                    </div>
-                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
-                        <span class="text-xs text-gray-400 uppercase font-bold">Máscara Coringa (Wildcard / ACL)</span>
-                        <div id="resWildcard" class="text-base sm:text-lg font-mono font-bold text-amber-400">0.0.0.255</div>
-                    </div>
-                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
-                        <span class="text-xs text-gray-400 uppercase font-bold">ID da Rede (Network)</span>
-                        <div id="resNet" class="text-base sm:text-lg font-mono font-bold text-sky-400">192.168.1.0</div>
-                    </div>
-                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
-                        <span class="text-xs text-gray-400 uppercase font-bold">Endereço de Broadcast</span>
-                        <div id="resBroadcast" class="text-base sm:text-lg font-mono font-bold text-amber-400">192.168.1.255</div>
-                    </div>
-                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540] sm:col-span-2">
-                        <span class="text-xs text-gray-400 uppercase font-bold">Faixa de IPs Úteis</span>
-                        <div id="resRange" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 break-all">192.168.1.1 - 192.168.1.254</div>
-                    </div>
-                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
-                        <span class="text-xs text-gray-400 uppercase font-bold">Total de Endereços</span>
-                        <div id="resTotal" class="text-base sm:text-lg font-mono font-bold">256</div>
-                    </div>
-                    <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
-                        <span class="text-xs text-gray-400 uppercase font-bold">Hosts Úteis</span>
-                        <div id="resUsable" class="text-base sm:text-lg font-mono font-bold text-emerald-400">254</div>
-                    </div>
-                </div>
-
-                <!-- PAINEL DE AUDITORIA E CLASSIFICAÇÃO INTELIGENTE -->
-                <div class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3">
-                    <span class="text-xs font-bold text-gray-300 uppercase">Diagnóstico de Tipo e Escopo IP:</span>
-                    <span id="auditIpBadge" class="px-3 py-1 rounded-full text-xs font-bold border bg-emerald-950/80 text-emerald-300 border-emerald-700">
-                        Privado (RFC 1918 - Não Roteável na WAN)
-                    </span>
-                </div>
-
-                <!-- REPRESENTAÇÃO BINÁRIA -->
-            <section class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540] space-y-2 overflow-hidden">
-                <h3 class="text-xs sm:text-sm font-bold text-[#f7a21b] uppercase tracking-wider">Decomposição Binária dos Octetos (Bits Reais)</h3>
-                <div class="text-xs text-gray-400 pb-1">
-                    <p><strong>Por que os três campos (IP, Máscara e Rede) parecem valores parecidos visualmente?</strong></p>
-                    <p class="mt-1">Isso ocorre quando o endereço IP inserido e a máscara de rede possuem grande proporção de bits <code class="text-[#f7a21b]">1</code> em comum nos primeiros octetos (por exemplo, na faixa <code class="text-[#f7a21b]">192.168.x.x</code> com máscara <code class="text-sky-400">255.255.255.0</code>). Os 24 primeiros bits (os três primeiros octetos <code class="text-emerald-400">11000000.10101000.00000001</code>) são exatamente idênticos porque a operação lógica <strong class="text-sky-400">AND</strong> preserva os bits do IP onde a máscara é <code class="text-sky-400">1</code>. A diferença real e o isolamento dos hosts ocorrem exclusivamente no último octeto!</p>
-                </div>
-                <div class="w-full overflow-x-auto pb-2 -mx-1 px-1">
-                    <div class="font-mono text-[11px] sm:text-xs space-y-2 min-w-[580px]">
-                            <div class="flex justify-between items-center py-1.5 px-2 bg-nbDark/60 rounded border border-[#2d3540]/60">
-                                <span class="w-40 text-gray-400 font-bold flex-shrink-0">IP (Decimal):</span>
-                                <span id="binIp" class="text-[#f7a21b] tracking-widest font-semibold">11000000.10101000.00000001.00110010</span>
-                            </div>
-                            <div class="flex justify-between items-center py-1.5 px-2 bg-nbDark/60 rounded border border-[#2d3540]/60">
-                                <span class="w-40 text-gray-400 font-bold flex-shrink-0">Máscara:</span>
-                                <span id="binMask" class="text-sky-400 tracking-widest font-semibold">11111111.11111111.11111111.00000000</span>
-                            </div>
-                            <div class="flex justify-between items-center py-1.5 px-2 bg-nbDark/60 rounded border border-[#2d3540]/60">
-                                <span class="w-40 text-gray-400 font-bold flex-shrink-0">Rede (IP AND Máscara):</span>
-                                <span id="binNet" class="text-emerald-400 tracking-widest font-semibold">11000000.10101000.00000001.00000000</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-[10px] text-gray-400 italic text-center sm:hidden">← Deslize horizontalmente para ver todos os bits →</p>
-                </div>
-
-                <!-- NOVA SEÇÃO EXPLICATIVA: A OPERAÇÃO LÓGICA AND -->
-                <div class="mt-4 pt-4 border-t border-[#2d3540] space-y-3">
-                    <h4 class="text-xs sm:text-sm font-bold text-[#f7a21b] flex items-center gap-1.5">
-                        💡 Como Funciona a Operação Lógica AND Bit a Bit (E Lógico)
-                    </h4>
-                    <p class="text-xs text-gray-300 leading-relaxed">
-                        A operação <strong>AND</strong> (Conjunção Lógica) é o princípio fundamental utilizado pelos roteadores e dispositivos de rede para extrair o <strong>ID da Rede</strong> a partir de um endereço IP e de sua máscara. A regra matemática é simples: o resultado só é <code class="text-emerald-400 font-bold">1</code> se <strong>ambos</strong> os bits comparados forem <code class="text-emerald-400 font-bold">1</code>. Caso contrário, o resultado é <code class="text-amber-400 font-bold">0</code>.
-                    </p>
-
-                    <!-- TABELA DA VERDADE DO AND -->
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-center text-xs border-collapse max-w-md mx-auto font-mono my-2">
-                            <thead>
-                                <tr class="bg-nbDark border-b border-[#2d3540] text-gray-300">
-                                    <th class="p-2 border border-[#2d3540]">Bit IP</th>
-                                    <th class="p-2 border border-[#2d3540]">Bit Máscara</th>
-                                    <th class="p-2 border border-[#2d3540] text-emerald-400">Resultado (IP AND Máscara)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="hover:bg-nbDark/40">
-                                    <td class="p-1.5 border border-[#2d3540]">0</td>
-                                    <td class="p-1.5 border border-[#2d3540]">0</td>
-                                    <td class="p-1.5 border border-[#2d3540] text-amber-400 font-bold">0 (Zera o bit)</td>
-                                </tr>
-                                <tr class="hover:bg-nbDark/40">
-                                    <td class="p-1.5 border border-[#2d3540]">1</td>
-                                    <td class="p-1.5 border border-[#2d3540]">0</td>
-                                    <td class="p-1.5 border border-[#2d3540] text-amber-400 font-bold">0 (Zera o bit)</td>
-                                </tr>
-                                <tr class="hover:bg-nbDark/40">
-                                    <td class="p-1.5 border border-[#2d3540]">0</td>
-                                    <td class="p-1.5 border border-[#2d3540]">1</td>
-                                    <td class="p-1.5 border border-[#2d3540] text-amber-400 font-bold">0 (Zera o bit)</td>
-                                </tr>
-                                <tr class="hover:bg-nbDark/40 bg-[#4b538b]/10">
-                                    <td class="p-1.5 border border-[#2d3540] font-bold">1</td>
-                                    <td class="p-1.5 border border-[#2d3540] font-bold">1</td>
-                                    <td class="p-1.5 border border-[#2d3540] text-emerald-400 font-bold">1 (Preserva o bit do IP!)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <p class="text-xs text-gray-400 italic">
-                        <strong>Aplicação Prática:</strong> Como a máscara de rede é composta por uma sequência contínua de <code class="text-sky-400">1</code>s seguida por <code class="text-amber-400">0</code>s, a operação AND faz com que os bits correspondentes aos <code class="text-sky-400">1</code>s copiem fielmente o endereço IP (formando o ID da Rede), enquanto os bits correspondentes aos <code class="text-amber-400">0</code>s da máscara zerem completamente o final do endereço, revelando o bloco de hosts disponíveis.
-                    </p>
-                </div>
-            </section>
-
-            <!-- TABELA DE CLASSES HISTÓRICAS (CLASSES A A E & RFC 1918) -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-sm space-y-6">
-                <h2 class="text-2xl font-bold text-[#f7a21b] flex items-center gap-2">
-                    🏛️ Endereçamento Histórico por Classes (Classful A - E)
-                </h2>
-                <p class="text-sm text-gray-300 leading-relaxed">
-                    Antes do modelo CIDR (1993), a Internet utilizava arquitetura rígida baseada no primeiro octeto do IP. Compreender este modelo é fundamental para exames de certificação e análise histórica de roteamento.
-                </p>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-nbCodeBg border-b border-[#2d3540] font-bold text-creamPale">
-                                <th class="p-3">Classe</th>
-                                <th class="p-3">1º Octeto</th>
-                                <th class="p-3">Bits Iniciais</th>
-                                <th class="p-3">Rede / Host</th>
-                                <th class="p-3">Máscara Padrão</th>
-                                <th class="p-3">Nº de Redes</th>
-                                <th class="p-3">Hosts / Rede</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-[#2d3540]/40 font-mono text-xs">
-                            <tr>
-                                <td class="p-3 font-bold text-[#f7a21b]">Classe A</td>
-                                <td class="p-3">1 - 126</td>
-                                <td class="p-3 text-sky-400 font-bold">0...</td>
-                                <td class="p-3">Rede.Host.Host.Host</td>
-                                <td class="p-3">255.0.0.0 (/8)</td>
-                                <td class="p-3">126</td>
-                                <td class="p-3 text-emerald-400 font-bold">~16,7 milhões</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-bold text-[#f7a21b]">Classe B</td>
-                                <td class="p-3">128 - 191</td>
-                                <td class="p-3 text-sky-400 font-bold">10...</td>
-                                <td class="p-3">Rede.Rede.Host.Host</td>
-                                <td class="p-3">255.255.0.0 (/16)</td>
-                                <td class="p-3">16.384</td>
-                                <td class="p-3 text-emerald-400 font-bold">65.534</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-bold text-[#f7a21b]">Classe C</td>
-                                <td class="p-3">192 - 223</td>
-                                <td class="p-3 text-sky-400 font-bold">110...</td>
-                                <td class="p-3">Rede.Rede.Rede.Host</td>
-                                <td class="p-3">255.255.255.0 (/24)</td>
-                                <td class="p-3">~2 milhões</td>
-                                <td class="p-3 text-emerald-400 font-bold">254</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-bold text-amber-400">Classe D</td>
-                                <td class="p-3">224 - 239</td>
-                                <td class="p-3 text-amber-400 font-bold">1110...</td>
-                                <td class="p-3 font-sans italic" colspan="4">Reservado para comunicação Multicast</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-bold text-red-400">Classe E</td>
-                                <td class="p-3">240 - 255</td>
-                                <td class="p-3 text-red-400 font-bold">1111...</td>
-                                <td class="p-3 font-sans italic" colspan="4">Experimental e pesquisas futuras</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- FAIXAS PRIVADAS E RESERVADAS -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <h3 class="font-bold text-[#f7a21b] text-sm flex items-center gap-1.5">🔒 Faixas Privadas (RFC 1918)</h3>
-                        <ul class="text-xs space-y-1 font-mono">
-                            <li>• <strong class="text-sky-400">Classe A:</strong> 10.0.0.0 até 10.255.255.255 (/8)</li>
-                            <li>• <strong class="text-sky-400">Classe B:</strong> 172.16.0.0 até 172.31.255.255 (/12)</li>
-                            <li>• <strong class="text-sky-400">Classe C:</strong> 192.168.0.0 até 192.168.255.255 (/16)</li>
-                        </ul>
-                    </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <h3 class="font-bold text-[#f7a21b] text-sm flex items-center gap-1.5">⚠️ Endereços Reservados Especiais</h3>
-                        <ul class="text-xs space-y-1 font-mono">
-                            <li>• <strong class="text-amber-400">127.0.0.1 (127.0.0.0/8):</strong> Loopback de diagnóstico interno</li>
-                            <li>• <strong class="text-amber-400">0.0.0.0/0:</strong> Rota padrão / qualquer rede</li>
-                            <li>• <strong class="text-amber-400">255.255.255.255:</strong> Broadcast limitado na rede local</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FLUXO LÓGICO DE RESOLUÇÃO REATIVO -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-sm space-y-6">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">🧠 Fluxo Lógico e Método do "Número Mágico"</h2>
-                <p class="text-sm text-gray-300">Este diagrama sintetiza os cálculos rápidos de cabeça através do <strong>Número Mágico</strong> ($2^{32-\text{prefixo}}$ ou $256 - \text{octeto crítico}$):</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <div class="text-[#f7a21b] font-extrabold text-lg">1. Bits de Host</div>
-                        <p class="text-xs text-gray-400">Subtração dos bits CIDR do total de 32 bits IPv4.</p>
-                        <div class="bg-[#15191d]/50 p-2 rounded text-xs font-mono font-bold text-[#f7a21b]" id="flowHostBits">8 bits (32 - 24)</div>
-                    </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <div class="text-sky-400 font-extrabold text-lg">2. Bitwise AND</div>
-                        <p class="text-xs text-gray-400">Operação binária lógica entre IP e Máscara para extrair o ID da Rede.</p>
-                        <div class="bg-[#15191d]/50 p-2 rounded text-xs font-mono font-bold text-sky-400 truncate" id="flowBitwiseOp">192.168.1.50 AND 255.255.255.0</div>
-                    </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <div class="text-amber-400 font-extrabold text-lg">3. Número Mágico (Salto)</div>
-                        <p class="text-xs text-gray-400">Tamanho do bloco calculado por 256 - octeto crítico.</p>
-                        <div class="bg-[#15191d]/50 p-2 rounded text-xs font-mono font-bold text-amber-400" id="flowBlockSize">256 IPs (256 total)</div>
-                    </div>
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <div class="text-emerald-400 font-extrabold text-lg">4. IPs Úteis</div>
-                        <p class="text-xs text-gray-400">Desconto dos endereços de Rede e Broadcast (2^H - 2).</p>
-                        <div class="bg-[#15191d]/50 p-2 rounded text-xs font-mono font-bold text-emerald-400" id="flowUsableCalc">254 hosts (256 - 2)</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SUB-REDES SEQUENCIAIS (FLSM / DIVISÃO DE BLOCOS) -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-sm space-y-4">
-                <div class="flex flex-wrap justify-between items-center gap-2">
-                    <h2 class="text-2xl font-bold text-[#f7a21b]">📊 Exemplo de Sub-divisão Sequencial (FLSM)</h2>
-                    <span class="text-xs font-mono bg-nbCodeBg px-3 py-1 rounded border border-[#2d3540]">IP Base: <span id="vlsmBaseIp" class="text-[#f7a21b] font-bold">192.168.1.0</span></span>
-                </div>
-                <p class="text-sm text-gray-300">Abaixo é exibido como a sua sub-rede configurada pode ser dividida em 4 sub-redes filhas menores de tamanho igual:</p>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-nbCodeBg border-b border-[#2d3540] text-gray-300 font-bold">
-                                <th class="p-3">Sub-rede</th>
-                                <th class="p-3">ID da Rede</th>
-                                <th class="p-3">Primeiro IP Útil</th>
-                                <th class="p-3">Último IP Útil</th>
-                                <th class="p-3">Broadcast</th>
-                                <th class="p-3">Hosts Úteis</th>
-                            </tr>
-                        </thead>
-                        <tbody id="subnetTableBody">
-                            <!-- Gerado via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- EXERCÍCIOS RESOLVIDOS COM GABARITO COMPLETO RESTAURADO -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-sm space-y-6 no-print">
-                <h2 class="text-2xl font-bold text-[#f7a21b] flex items-center gap-2">
-                    ✍️ Exercícios Práticos Resolvidos
-                </h2>
-                <div class="space-y-4">
-
-                    <!-- EXERCÍCIO 1 -->
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-sky-400 text-sm">Exercício 1: Identificação de Classe</span>
-                        </div>
-                        <p class="text-xs">Identifique a classe e a máscara padrão do endereço <code>190.10.5.7</code>.</p>
-                        <details class="text-xs mt-2">
-                            <summary class="cursor-pointer font-bold text-[#f7a21b] hover:underline">Ver Gabarito Comentado</summary>
-                            <div class="mt-2 p-2 bg-[#15191d]/60 rounded border border-[#2d3540] text-emerald-400 font-mono">
-                                O 1º octeto (190) está no intervalo 128-191. Portanto, trata-se de um endereço da <strong>Classe B</strong> com máscara padrão /16 (255.255.0.0).
-                            </div>
-                        </details>
-                    </div>
-
-                    <!-- EXERCÍCIO 2 -->
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-sky-400 text-sm">Exercício 2: Conversão de Prefixo</span>
-                        </div>
-                        <p class="text-xs">Converta o prefixo <code>/28</code> em máscara decimal e determine a quantidade de hosts úteis.</p>
-                        <details class="text-xs mt-2">
-                            <summary class="cursor-pointer font-bold text-[#f7a21b] hover:underline">Ver Gabarito Comentado</summary>
-                            <div class="mt-2 p-2 bg-[#15191d]/60 rounded border border-[#2d3540] text-emerald-400 font-mono">
-                                Máscara Decimal: <strong>255.255.255.240</strong>.<br>
-                                Bits de Host: 32 - 28 = 4 bits.<br>
-                                Hosts Úteis: 2^4 - 2 = 16 - 2 = <strong>14 hosts úteis</strong>.
-                            </div>
-                        </details>
-                    </div>
-
-                    <!-- EXERCÍCIO 3 -->
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-sky-400 text-sm">Exercício 3: Subnetting /24 para 4 Sub-redes</span>
-                        </div>
-                        <p class="text-xs">Divida o bloco <code>192.168.50.0/24</code> em 4 sub-redes e liste as faixas.</p>
-                        <details class="text-xs mt-2">
-                            <summary class="cursor-pointer font-bold text-[#f7a21b] hover:underline">Ver Gabarito Comentado</summary>
-                            <div class="mt-2 p-2 bg-[#15191d]/60 rounded border border-[#2d3540] text-emerald-400 font-mono space-y-1">
-                                Para 4 sub-redes: 2^n = 4 => n = 2 bits emprestados => Novo Prefixo: /26.<br>
-                                Salto = 256 - 192 = 64.<br>
-                                • Sub-rede 1: 192.168.50.0/26 (Útil: .1 até .62, Broadcast: .63)<br>
-                                • Sub-rede 2: 192.168.50.64/26 (Útil: .65 até .126, Broadcast: .127)<br>
-                                • Sub-rede 3: 192.168.50.128/26 (Útil: .129 até .190, Broadcast: .191)<br>
-                                • Sub-rede 4: 192.168.50.192/26 (Útil: .193 até .254, Broadcast: .255)
-                            </div>
-                        </details>
-                    </div>
-
-                    <!-- EXERCÍCIO 4 -->
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-sky-400 text-sm">Exercício 4: Identificar Rede em Octeto Intermediário</span>
-                        </div>
-                        <p class="text-xs">Qual é a rede a que pertence o IP <code>172.16.45.200/20</code>?</p>
-                        <details class="text-xs mt-2">
-                            <summary class="cursor-pointer font-bold text-[#f7a21b] hover:underline">Ver Gabarito Comentado</summary>
-                            <div class="mt-2 p-2 bg-[#15191d]/60 rounded border border-[#2d3540] text-emerald-400 font-mono">
-                                Máscara /20 = 255.255.240.0. Octeto Crítico: 3º (240).<br>
-                                Salto = 256 - 240 = 16 no 3º octeto (0, 16, 32, 48...).<br>
-                                O valor 45 do IP está entre 32 e 47.<br>
-                                Logo, o Endereço de Rede é: <strong>172.16.32.0</strong>.
-                            </div>
-                        </details>
-                    </div>
-
-                    <!-- EXERCÍCIO 5 -->
-                    <div class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540] space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-sky-400 text-sm">Exercício 5: Dimensionamento por Necessidade</span>
-                        </div>
-                        <p class="text-xs">Qual o menor prefixo para acomodar 300 hosts em uma mesma sub-rede?</p>
-                        <details class="text-xs mt-2">
-                            <summary class="cursor-pointer font-bold text-[#f7a21b] hover:underline">Ver Gabarito Comentado</summary>
-                            <div class="mt-2 p-2 bg-[#15191d]/60 rounded border border-[#2d3540] text-emerald-400 font-mono">
-                                Fórmula: 2^h - 2 >= 300 => 2^h >= 302.<br>
-                                Para h = 8 => 256 IPs (insuficiente).<br>
-                                Para h = 9 => 512 IPs (510 úteis).<br>
-                                Prefixo = 32 - 9 = <strong>/23 (Máscara 255.255.254.0)</strong>.
-                            </div>
-                        </details>
-                    </div>
-
-                </div>
-            </section>
+        <div class="class-row">
+          <span class="class-badge class-badge--b">B</span>
+          <div class="class-info">
+            <span class="class-range">128.0.0.0 – 191.255.255.255</span>
+            <span class="class-use">Redes médias · máscara padrão /16</span>
+          </div>
+          <span class="class-status class-status--ok">Host ✓</span>
         </div>
-
-        <!-- ABA 2: VLSM & SUPERNETTING -->
-        <div id="tab-vlsm" class="tab-content hidden space-y-8">
-            <!-- CALCULADORA VLSM REAL -->
-            <section class="bg-nbDark p-4 sm:p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4 sm:space-y-6">
-                <h2 class="text-xl sm:text-2xl font-bold text-[#f7a21b]">🔀 Calculadora VLSM (Sub-redes de Tamanho Variável)</h2>
-                <p class="text-xs sm:text-sm text-gray-400">Insira um bloco IP base e configure a necessidade de hosts por setor. A plataforma ordenará automaticamente do maior para o menor bloco sem desperdício.</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Bloco Base (IP/CIDR):</label>
-                        <input type="text" id="vlsmBaseInput" value="192.168.10.0/24" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm focus:outline-none focus:ring-1 focus:ring-[#f7a21b]">
-                        <p id="vlsmErrorMsg" class="text-red-400 text-xs mt-1 hidden font-bold">Formato inválido. Use a sintaxe ex: 192.168.10.0/24</p>
-                    </div>
-                    <div class="flex items-end">
-                        <button onclick="addVlsmSector()" class="w-full py-2.5 px-4 rounded bg-[#4b538b]/40 hover:bg-[#4b538b]/60 text-white font-bold text-xs sm:text-sm transition border border-[#4b538b]">
-                            + Adicionar Setor
-                        </button>
-                    </div>
-                </div>
-
-                <div id="vlsmSectorsContainer" class="space-y-2.5 sm:space-y-3">
-                    <div class="flex items-center gap-2 vlsm-sector-row">
-                        <input type="text" placeholder="Nome do Setor" value="Engenharia" class="vlsm-name flex-1 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <input type="number" placeholder="Hosts" value="60" min="1" class="vlsm-hosts w-20 sm:w-28 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <button onclick="this.parentElement.remove()" class="px-2.5 py-2 sm:py-2.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold border border-red-800">✕</button>
-                    </div>
-                    <div class="flex items-center gap-2 vlsm-sector-row">
-                        <input type="text" placeholder="Nome do Setor" value="Vendas" class="vlsm-name flex-1 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <input type="number" placeholder="Hosts" value="25" min="1" class="vlsm-hosts w-20 sm:w-28 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <button onclick="this.parentElement.remove()" class="px-2.5 py-2 sm:py-2.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold border border-red-800">✕</button>
-                    </div>
-                    <div class="flex items-center gap-2 vlsm-sector-row">
-                        <input type="text" placeholder="Nome do Setor" value="Diretoria" class="vlsm-name flex-1 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <input type="number" placeholder="Hosts" value="10" min="1" class="vlsm-hosts w-20 sm:w-28 p-2 sm:p-2.5 rounded bg-nbCodeBg border border-[#2d3540] text-xs font-mono">
-                        <button onclick="this.parentElement.remove()" class="px-2.5 py-2 sm:py-2.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold border border-red-800">✕</button>
-                    </div>
-                </div>
-
-                <button onclick="calculateVlsm()" class="w-full py-2.5 sm:py-3 px-6 rounded-lg bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm sm:text-base">
-                    Calcular Alocação VLSM
-                </button>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse min-w-[600px]">
-                        <thead>
-                            <tr class="bg-nbCodeBg border-b border-[#2d3540] text-gray-300 font-bold">
-                                <th class="p-3">Setor</th>
-                                <th class="p-3">Hosts Solicitados</th>
-                                <th class="p-3">ID da Rede / CIDR</th>
-                                <th class="p-3">Máscara Decimal</th>
-                                <th class="p-3">Faixa Útil</th>
-                                <th class="p-3">Broadcast</th>
-                                <th class="p-3">Capacidade</th>
-                            </tr>
-                        </thead>
-                        <tbody id="vlsmTableBody">
-                            <!-- Gerado via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- SUMARIZAÇÃO DE ROTAS (SUPERNETTING) -->
-            <section class="bg-nbDark p-4 sm:p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-xl sm:text-2xl font-bold text-[#f7a21b]">🌐 Sumarização de Rotas (Supernetting / Route Aggregation)</h2>
-                <p class="text-xs sm:text-sm text-gray-400">Insira dois ou mais endereços de rede (um por linha) para agregar em uma única rota sumarizada contígua.</p>
-
-                <textarea id="supernetInput" rows="4" class="w-full p-2.5 sm:p-3 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-xs focus:outline-none focus:ring-1 focus:ring-[#f7a21b]" placeholder="192.168.0.0/24&#10;192.168.1.0/24&#10;192.168.2.0/24&#10;192.168.3.0/24"></textarea>
-
-                <button onclick="calculateSupernet()" class="w-full py-2.5 px-6 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-xs sm:text-sm">
-                    Gerar Rota Sumarizada
-                </button>
-
-                <div id="supernetResult" class="bg-nbCodeBg p-3 sm:p-4 rounded-lg border border-[#2d3540]">
-                    <span class="text-gray-400 text-xs">Aguardando endereços...</span>
-                </div>
-            </section>
+        <div class="class-row">
+          <span class="class-badge class-badge--c">C</span>
+          <div class="class-info">
+            <span class="class-range">192.0.0.0 – 223.255.255.255</span>
+            <span class="class-use">Redes pequenas · máscara padrão /24</span>
+          </div>
+          <span class="class-status class-status--ok">Host ✓</span>
         </div>
-
-        <!-- ABA 3: IPV6 & EUI-64 -->
-        <div id="tab-ipv6" class="tab-content hidden space-y-8">
-            <!-- ANALISADOR E COMPRESSOR IPV6 -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">⚡ Analisador e Compressor IPv6 (RFC 5952)</h2>
-                <p class="text-sm text-gray-400">Insira qualquer endereço IPv6 (abreviado ou completo) para realizar a expansão/compressão RFC e identificar seu escopo.</p>
-
-                <div class="flex gap-2">
-                    <input type="text" id="ipv6Input" value="2001:db8:0:0:0:0:0:1" class="flex-1 p-3 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm focus:outline-none focus:ring-1 focus:ring-[#f7a21b]" placeholder="Ex: fe80::1 ou 2001:db8::1">
-                    <button onclick="processIPv6()" class="py-3 px-6 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm">
-                        Analisar
-                    </button>
-                </div>
-
-                <div id="ipv6Result" class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                    <span class="text-gray-400 text-xs">Insira um endereço acima...</span>
-                </div>
-            </section>
-
-            <!-- GERADOR EUI-64 -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">🛠️ Gerador EUI-64 (Interface ID via Endereço MAC)</h2>
-                <p class="text-sm text-gray-400">Converte um endereço MAC físico e um prefixo /64 no Interface ID e no endereço IPv6 completo (inversão do 7º bit U/L e inserção de FF:FE).</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Endereço MAC (48 bits):</label>
-                        <input type="text" id="euiMacInput" value="00:1A:2B:3C:4D:5E" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm focus:outline-none focus:ring-1 focus:ring-[#f7a21b]">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Prefixo IPv6 (/64):</label>
-                        <input type="text" id="euiPrefixInput" value="2001:db8:1000:1" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm focus:outline-none focus:ring-1 focus:ring-[#f7a21b]">
-                    </div>
-                </div>
-
-                <p id="euiErrorMsg" class="text-red-400 text-xs hidden font-bold">Endereço MAC inválido. Certifique-se de ter 12 dígitos hexadecimais.</p>
-
-                <button onclick="calculateEui64()" class="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm">
-                    Gerar Endereço EUI-64
-                </button>
-
-                <div id="euiResult" class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                    <span class="text-gray-400 text-xs">Aguardando dados...</span>
-                </div>
-            </section>
+        <div class="class-row">
+          <span class="class-badge class-badge--d">D</span>
+          <div class="class-info">
+            <span class="class-range">224.0.0.0 – 239.255.255.255</span>
+            <span class="class-use">Multicast · grupos, não hosts (RFC 5771)</span>
+          </div>
+          <span class="class-status class-status--no">Bloqueado ✗</span>
         </div>
-
-        <!-- ABA 4: DESEMPENHO, TRÁFEGO & ERLANG-B -->
-        <div id="tab-perf" class="tab-content hidden space-y-8">
-            <!-- CALCULADORA DE LATÊNCIA TOTAL -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">⏱️ Calculadora de Latência Total (Delays Fim-a-Fim)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Tamanho do Pacote (Bytes):</label>
-                        <input type="number" id="latPacketSize" value="1500" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Largura de Banda (Bps):</label>
-                        <input type="number" id="latBandwidth" value="100000000" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Distância (Km):</label>
-                        <input type="number" id="latDistance" value="1000" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Meio Físico de Transmissão:</label>
-                        <select id="latMedium" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                            <option value="fiber">Fibra Óptica / Cobre (~200.000 km/s)</option>
-                            <option value="radio">Rádio / Espaço Livre / Satélite (~300.000 km/s)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Atraso de Processamento (ms):</label>
-                        <input type="number" id="latProcDelay" value="0.1" step="0.01" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Atraso de Fila (ms):</label>
-                        <input type="number" id="latQueueDelay" value="0.5" step="0.01" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                </div>
-
-                <button onclick="calculateLatency()" class="w-full py-2.5 px-6 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm">
-                    Calcular Latência Fim-a-Fim
-                </button>
-
-                <div id="latencyResult" class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                    <span class="text-gray-400 text-xs">Clique em calcular...</span>
-                </div>
-            </section>
-
-            <!-- TEMPO DE TRANSFERÊNCIA E BDP -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">📈 Tempo de Transferência e BDP (Bandwidth-Delay Product)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Tamanho do Arquivo (MB):</label>
-                        <input type="number" id="bdpFileSize" value="500" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Banda Contratada (Mbps):</label>
-                        <input type="number" id="bdpBandwidth" value="100" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">RTT - Ida e Volta (ms):</label>
-                        <input type="number" id="bdpRtt" value="50" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Overhead de Protocolos (%):</label>
-                        <input type="number" id="bdpOverhead" value="5" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                </div>
-
-                <button onclick="calculateBdp()" class="w-full py-2.5 px-6 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm">
-                    Dimensionar BDP e Janela TCP
-                </button>
-
-                <div id="bdpResult" class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                    <span class="text-gray-400 text-xs">Clique em calcular...</span>
-                </div>
-            </section>
-
-            <!-- MODELO DE TRÁFEGO ERLANG-B -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">📞 Teoria de Tráfego e Dimensionamento (Erlang-B)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Taxa de Chegada (Chamadas/hora):</label>
-                        <input type="number" id="erlangLambda" value="120" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Duração Média (Segundos):</label>
-                        <input type="number" id="erlangDuration" value="180" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Número de Canais / Troncos (N):</label>
-                        <input type="number" id="erlangChannels" value="10" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                </div>
-
-                <button onclick="calculateErlang()" class="w-full py-2.5 px-6 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm">
-                    Calcular Probabilidade de Bloqueio
-                </button>
-
-                <div id="erlangResult" class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                    <span class="text-gray-400 text-xs">Clique em calcular...</span>
-                </div>
-            </section>
+        <div class="class-row">
+          <span class="class-badge class-badge--e">E</span>
+          <div class="class-info">
+            <span class="class-range">240.0.0.0 – 255.255.255.255</span>
+            <span class="class-use">Reservado · experimental (RFC 1112)</span>
+          </div>
+          <span class="class-status class-status--no">Bloqueado ✗</span>
         </div>
-
-        <!-- ABA 5: FÍSICA, ENLACE & OSPF -->
-        <div id="tab-phys" class="tab-content hidden space-y-8">
-            <!-- CAPACIDADE DE CANAL (NYQUIST & SHANNON) -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">📡 Capacidade Máxima de Canal (Nyquist & Shannon-Hartley)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Largura de Banda (Hz):</label>
-                        <input type="number" id="capBw" value="1000000" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Níveis de Sinalização (Nyquist):</label>
-                        <input type="number" id="capLevels" value="2" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Relação Sinal-Ruído - SNR (dB):</label>
-                        <input type="number" id="capSnr" value="30" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                </div>
-
-                <button onclick="calculateCapacity()" class="w-full py-2.5 px-6 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm">
-                    Calcular Limites Teóricos
-                </button>
-
-                <div id="capacityResult" class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                    <span class="text-gray-400 text-xs">Clique em calcular...</span>
-                </div>
-            </section>
-
-            <!-- ORÇAMENTO DE POTÊNCIA (LINK BUDGET) -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">🔋 Orçamento de Potência de Enlace (Link Budget)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Potência TX (dBm):</label>
-                        <input type="number" id="lbTxPower" value="20" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Ganho Antena TX (dBi):</label>
-                        <input type="number" id="lbTxGain" value="15" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Ganho Antena RX (dBi):</label>
-                        <input type="number" id="lbRxGain" value="15" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Perdas do Meio/Cabo (dB):</label>
-                        <input type="number" id="lbLosses" value="110" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Sensibilidade RX (dBm):</label>
-                        <input type="number" id="lbRxSens" value="-85" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                </div>
-
-                <button onclick="calculateLinkBudget()" class="w-full py-2.5 px-6 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm">
-                    Calcular Sinal RX e Margem
-                </button>
-
-                <div id="linkBudgetResult" class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                    <span class="text-gray-400 text-xs">Clique em calcular...</span>
-                </div>
-            </section>
-
-            <!-- GERADOR DE DETECÇÃO DE ERROS (CRC & FER) -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">🛡️ Verificação de Integridade CRC e Estimativa FER</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Vetor de Dados Binários:</label>
-                        <input type="text" id="crcDataInput" value="1101001110" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Polinômio Gerador Binário:</label>
-                        <input type="text" id="crcPolyInput" value="1011" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                </div>
-
-                <button onclick="calculateCrc()" class="w-full py-2 px-4 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-xs">
-                    Calcular FCS / Resto CRC
-                </button>
-
-                <div id="crcResult" class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                    <span class="text-gray-400 text-xs">Aguardando cálculo de CRC...</span>
-                </div>
-
-                <!-- TAXA DE ERRO DE QUADRO (FER) -->
-                <div class="pt-4 border-t border-[#2d3540] space-y-4">
-                    <h3 class="text-sm font-bold text-[#f7a21b] uppercase">Estimativa de Erro de Quadro (FER baseada em BER)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 mb-1">Bit Error Rate (BER):</label>
-                            <input type="number" id="ferBerInput" value="0.00001" step="0.000001" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 mb-1">Tamanho do Quadro N (bits):</label>
-                            <input type="number" id="ferBitsInput" value="12000" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                        </div>
-                    </div>
-                    <button onclick="calculateFer()" class="w-full py-2 px-4 rounded bg-[#4b538b]/40 hover:bg-[#4b538b]/60 text-white font-bold transition shadow text-xs border border-[#4b538b]">
-                        Calcular Taxa FER
-                    </button>
-                    <div id="ferResult" class="bg-nbCodeBg p-3 rounded-lg border border-[#2d3540]">
-                        <span class="text-gray-400 text-xs">Clique em calcular FER...</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CUSTO DE ROTEAMENTO OSPF -->
-            <section class="bg-nbDark p-6 rounded-xl border border-[#4b538b] shadow-md space-y-4">
-                <h2 class="text-2xl font-bold text-[#f7a21b]">🗺️ Custo de Métricas de Roteamento OSPF (Dijkstra SPF)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Banda de Referência (Mbps):</label>
-                        <input type="number" id="ospfRefBw" value="100" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">Banda da Interface (Mbps):</label>
-                        <input type="number" id="ospfIfBw" value="10" class="w-full p-2.5 rounded bg-nbCodeBg border border-[#2d3540] font-mono text-sm">
-                    </div>
-                </div>
-
-                <button onclick="calculateOspfCost()" class="w-full py-2.5 px-6 rounded bg-gradient-to-r from-[#4b538b] to-[#d60257] text-white font-bold hover:opacity-95 transition shadow text-sm">
-                    Calcular Custo da Interface
-                </button>
-
-                <div id="ospfResult" class="bg-nbCodeBg p-4 rounded-lg border border-[#2d3540]">
-                    <span class="text-gray-400 text-xs">Clique em calcular...</span>
-                </div>
-            </section>
+        <div class="class-row">
+          <span class="class-badge class-badge--l">L</span>
+          <div class="class-info">
+            <span class="class-range">127.0.0.0 – 127.255.255.255</span>
+            <span class="class-use">Loopback · nunca sai da máquina</span>
+          </div>
+          <span class="class-status class-status--ok">Host ~</span>
         </div>
+      </div>
+    </details>
 
-    </main>
+    <div class="examples" role="group" aria-label="Exemplos">
+      <span class="presets-label">Exemplos:</span>
+      <button type="button" class="example" data-example="192.168.1.1/24">192.168.1.1/24</button>
+      <button type="button" class="example" data-example="10.0.0.5/8">10.0.0.5/8</button>
+      <button type="button" class="example" data-example="172.16.0.1/16">172.16.0.1/16</button>
+      <button type="button" class="example" data-example="8.8.8.8/32">8.8.8.8/32</button>
+      <button type="button" class="example" data-example="224.0.0.1/4">224.0.0.1/4</button>
+    </div>
 
-    <footer class="max-w-7xl mx-auto px-4 mt-12 pt-6 border-t border-[#4b538b] text-center text-xs text-gray-400">
-        Network Engineering & Network Suite — Paleta Vibrante (#4b538b, #15191d, #f7a21b, #e45635, #d60257). Plataforma completa e validada sem erros.
-    </footer>
+    <div class="presets" role="group" aria-label="Alterar máscara do IP atual">
+      <span class="presets-label">Máscara:</span>
+      <button type="button" class="preset" data-preset="0">/0</button>
+      <button type="button" class="preset" data-preset="8">/8</button>
+      <button type="button" class="preset" data-preset="16">/16</button>
+      <button type="button" class="preset" data-preset="24">/24</button>
+      <button type="button" class="preset" data-preset="26">/26</button>
+      <button type="button" class="preset" data-preset="30">/30</button>
+      <button type="button" class="preset" data-preset="32">/32</button>
+    </div>
+  </section>
 
+  <nav class="nav" aria-label="Navegação de etapas">
+    <button type="button" class="btn btn-ghost" id="btn-prev">← Anterior</button>
+    <button type="button" class="btn btn-danger-ghost" id="btn-restart">↻ Reiniciar</button>
+    <button type="button" class="btn btn-secondary" id="btn-next">Próximo →</button>
+  </nav>
+
+  <ol class="stepper" id="stepper" aria-label="Etapas do cálculo"></ol>
+
+  <div class="step-meta" aria-live="polite" aria-atomic="true">
+    <span id="step-counter">Passo 1 de 8</span>
+    <span id="step-title">Análise Inicial</span>
+  </div>
+  <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+
+  <div id="notice" class="notice" hidden role="status" aria-live="polite">
+    <span class="notice-icon" id="notice-icon" aria-hidden="true">⚠</span>
+    <div class="notice-body" id="notice-body"></div>
+  </div>
+
+  <section id="step-content" class="step-content"></section>
+
+</main>
+
+<footer class="app-footer">
+  <p class="footer-main">Guia Definitivo de Sub-redes · Masterclass Interativa de Arquitetura de Redes</p>
+  <p class="footer-next"><strong>Próximos tópicos:</strong> VLSM · Supernetting · IPv6</p>
+</footer>
+
+<div id="toast" class="toast" aria-live="polite">
+  <span id="toast-msg"></span>
+  <button type="button" class="toast-close" id="toast-close" aria-label="Fechar notificação">×</button>
+</div>
+
+<script type="module">
+/* ============================================================
+   MÓDULO 1 — SUBNET LOGIC
+   ============================================================ */
+const Subnet = (() => {
+  const ipToLong = (ip) => ip.split('.').reduce((a, o) => ((a << 8) + parseInt(o, 10)) >>> 0, 0) >>> 0;
+  const longToIp = (n) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
+
+  function ipInCidr(ip, cidrStr) {
+    const [net, bits] = cidrStr.split('/');
+    const b = parseInt(bits, 10);
+    const mask = b === 0 ? 0 : ((0xFFFFFFFF << (32 - b)) >>> 0);
+    return ((ipToLong(ip) & mask) >>> 0) === ((ipToLong(net) & mask) >>> 0);
+  }
+
+  function getClass(ip) {
+    const first = parseInt(ip.split('.')[0], 10);
+    if (first === 0)  return { letter: '—', name: 'Esta rede', range: '0.0.0.0/8' };
+    if (first <= 126) return { letter: 'A', name: 'Rede grande', range: '1.0.0.0 – 126.255.255.255' };
+    if (first === 127) return { letter: 'L', name: 'Loopback', range: '127.0.0.0/8' };
+    if (first <= 191) return { letter: 'B', name: 'Rede média', range: '128.0.0.0 – 191.255.255.255' };
+    if (first <= 223) return { letter: 'C', name: 'Rede pequena', range: '192.0.0.0 – 223.255.255.255' };
+    if (first <= 239) return { letter: 'D', name: 'Multicast', range: '224.0.0.0 – 239.255.255.255' };
+    return { letter: 'E', name: 'Reservado', range: '240.0.0.0 – 255.255.255.255' };
+  }
+
+  const RANGES = [
+    { cidr: '255.255.255.255/32', name: 'Broadcast limitado', rfc: 'RFC 919',
+      severity: 'error', hostable: false, classLetter: 'E',
+      desc: 'Endereço de broadcast local — não identifica um host individual.' },
+    { cidr: '0.0.0.0/8',          name: 'Esta rede',          rfc: 'RFC 1122',
+      severity: 'error', hostable: false, classLetter: '—',
+      desc: 'Faixa reservada para "esta rede". Use um IP concreto do seu bloco.' },
+    { cidr: '127.0.0.0/8',        name: 'Loopback',           rfc: 'RFC 1122',
+      severity: 'warning', hostable: true, classLetter: 'L',
+      desc: 'Endereço de loopback — usado apenas para testes locais, nunca sai da máquina.' },
+    { cidr: '10.0.0.0/8',         name: 'Privada (A)',        rfc: 'RFC 1918',
+      severity: 'info', hostable: true, classLetter: 'A',
+      desc: 'Faixa privada — não roteável na Internet pública.' },
+    { cidr: '100.64.0.0/10',      name: 'CGNAT',              rfc: 'RFC 6598',
+      severity: 'warning', hostable: true, classLetter: 'A',
+      desc: 'Carrier-Grade NAT — compartilhado entre assinantes.' },
+    { cidr: '169.254.0.0/16',     name: 'Link-local (APIPA)', rfc: 'RFC 3927',
+      severity: 'warning', hostable: true, classLetter: 'B',
+      desc: 'Auto-configuração quando DHCP falha.' },
+    { cidr: '172.16.0.0/12',      name: 'Privada (B)',        rfc: 'RFC 1918',
+      severity: 'info', hostable: true, classLetter: 'B',
+      desc: 'Faixa privada — não roteável na Internet pública.' },
+    { cidr: '192.0.0.0/24',       name: 'IETF Protocol',      rfc: 'RFC 6890',
+      severity: 'warning', hostable: true, classLetter: 'C',
+      desc: 'Atribuições de protocolo IETF.' },
+    { cidr: '192.0.2.0/24',       name: 'TEST-NET-1',         rfc: 'RFC 5737',
+      severity: 'info', hostable: true, classLetter: 'C',
+      desc: 'Uso em documentação e exemplos.' },
+    { cidr: '192.168.0.0/16',     name: 'Privada (C)',        rfc: 'RFC 1918',
+      severity: 'info', hostable: true, classLetter: 'C',
+      desc: 'Faixa privada — não roteável na Internet pública.' },
+    { cidr: '198.18.0.0/15',      name: 'Benchmark',          rfc: 'RFC 2544',
+      severity: 'warning', hostable: true, classLetter: 'C',
+      desc: 'Benchmark de equipamentos.' },
+    { cidr: '198.51.100.0/24',    name: 'TEST-NET-2',         rfc: 'RFC 5737',
+      severity: 'info', hostable: true, classLetter: 'C',
+      desc: 'Uso em documentação e exemplos.' },
+    { cidr: '203.0.113.0/24',     name: 'TEST-NET-3',         rfc: 'RFC 5737',
+      severity: 'info', hostable: true, classLetter: 'C',
+      desc: 'Uso em documentação e exemplos.' },
+    { cidr: '224.0.0.0/4',        name: 'Multicast',          rfc: 'RFC 5771',
+      severity: 'error', hostable: false, classLetter: 'D',
+      desc: 'Endereço de grupo multicast — não representa um host individual.' },
+    { cidr: '240.0.0.0/4',        name: 'Reservado',          rfc: 'RFC 1112',
+      severity: 'error', hostable: false, classLetter: 'E',
+      desc: 'Faixa reservada para uso futuro/experimental — sem uso prático como host.' },
+  ];
+
+  function classifyIp(ip, cidr) {
+    if (ip === '0.0.0.0' && cidr === 0) {
+      return {
+        classe: '—', name: 'Rota padrão', range: '0.0.0.0/0',
+        severity: 'warning', hostable: true, rfc: '—',
+        desc: 'Rota padrão — cobre todo o espaço IPv4. Não é atribuível a hosts.',
+      };
+    }
+    for (const r of RANGES) {
+      if (ipInCidr(ip, r.cidr)) {
+        return {
+          classe: r.classLetter, name: r.name, range: r.cidr,
+          severity: r.severity, hostable: r.hostable, rfc: r.rfc, desc: r.desc,
+        };
+      }
+    }
+    const cls = getClass(ip);
+    return {
+      classe: cls.letter, name: cls.name, range: cls.range,
+      severity: null, hostable: true, rfc: null,
+      desc: 'Endereço IPv4 público roteável.',
+    };
+  }
+
+  function validate(input, force = false) {
+    const s = String(input).trim().replace(/\s+/g, '');
+    if (s === '') return { ok: false, error: 'Digite um endereço (ex: 192.168.1.1/24)' };
+    if (/^\d{1,3}(\.\d{1,3}){3}$/.test(s)) return { ok: false, error: 'Falta a máscara CIDR — adicione /XX (ex: /24)' };
+    if (/^\/\d{1,2}$/.test(s)) return { ok: false, error: 'Falta o endereço IP antes da máscara' };
+
+    const m = s.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/(\d{1,2})$/);
+    if (!m) return { ok: false, error: 'Formato inválido. Use: 192.168.1.1/24' };
+
+    const oct = [m[1], m[2], m[3], m[4]].map((o) => parseInt(o, 10));
+    const cidr = parseInt(m[5], 10);
+
+    for (let i = 0; i < 4; i++) {
+      if (oct[i] > 255) return { ok: false, error: `Octeto ${i + 1} inválido: ${oct[i]} (máximo 255)` };
+    }
+    if (cidr > 32) return { ok: false, error: `Máscara /${cidr} inválida (máx /32)` };
+
+    const ip = oct.join('.');
+    const cls = classifyIp(ip, cidr);
+
+    if (!force && !cls.hostable) {
+      return {
+        ok: false, blocked: true,
+        error: `${ip} não pode ser host (${cls.name}).`,
+        hint: cls.desc,
+        classification: cls,
+      };
+    }
+
+    return { ok: true, ip, cidr, classification: cls };
+  }
+
+  function calculate(ip, cidr) {
+    const ipLong = ipToLong(ip);
+    const maskLong = cidr === 0 ? 0 : ((0xFFFFFFFF << (32 - cidr)) >>> 0);
+    const redeLong = (ipLong & maskLong) >>> 0;
+    const broadcastLong = (redeLong | (~maskLong >>> 0)) >>> 0;
+
+    const octetoAfetadoIdx = cidr === 0 ? 0 : Math.floor((cidr - 1) / 8);
+    const bitsNoOcteto = cidr === 0 ? 0 : (cidr % 8 === 0 ? 8 : cidr % 8);
+    const tamanhoBloco = Math.pow(2, 8 - bitsNoOcteto);
+    const maskOctetoValue = 256 - tamanhoBloco;
+
+    const ipRede = longToIp(redeLong);
+    const ipBroadcast = longToIp(broadcastLong);
+
+    let totalHosts, primeiroHost, ultimoHost;
+    if (cidr === 32) { totalHosts = 1; primeiroHost = ipRede; ultimoHost = ipRede; }
+    else if (cidr === 31) { totalHosts = 2; primeiroHost = ipRede; ultimoHost = ipBroadcast; }
+    else {
+      totalHosts = Math.pow(2, 32 - cidr) - 2;
+      primeiroHost = longToIp(redeLong + 1);
+      ultimoHost = longToIp(broadcastLong - 1);
+    }
+
+    return {
+      ipLong, maskLong, redeLong, broadcastLong,
+      ipRede, ipBroadcast, primeiroHost, ultimoHost,
+      mascaraStr: longToIp(maskLong),
+      octetoAfetadoIdx, bitsNoOcteto, tamanhoBloco, maskOctetoValue,
+      totalHosts, ehMultiploDe8: cidr % 8 === 0,
+      tipo: cidr === 0 ? 'rota-padrao' : cidr < 8 ? 'supernet' : cidr === 32 ? 'host' : cidr === 31 ? 'ponto-a-ponto' : 'sub-rede',
+      ipEhRede: cidr < 31 && ipLong === redeLong,
+      ipEhBroadcast: cidr < 31 && ipLong === broadcastLong,
+    };
+  }
+
+  return { ipToLong, longToIp, ipInCidr, getClass, classifyIp, validate, calculate };
+})();
+
+/* ============================================================
+   MÓDULO 2 — STATE
+   ============================================================ */
+const State = (() => {
+  const DEFAULT = { ip: '192.168.10.50', cidr: 26, passo: 1 };
+  let state = { ...DEFAULT };
+  const listeners = [];
+  function syncUrl() {
+    try {
+      const p = new URLSearchParams();
+      p.set('ip', `${state.ip}/${state.cidr}`);
+      p.set('step', String(state.passo));
+      history.replaceState(null, '', `?${p.toString()}`);
+    } catch (_) {}
+  }
+  function get() { return { ...state }; }
+  function set(patch) { state = { ...state, ...patch }; listeners.forEach((fn) => fn(state)); syncUrl(); }
+  function subscribe(fn) { listeners.push(fn); }
+  function fromUrl() {
+    try {
+      const p = new URLSearchParams(location.search);
+      const ipParam = p.get('ip');
+      const stepParam = p.get('step');
+      if (ipParam) {
+        const v = Subnet.validate(ipParam, true);
+        if (v.ok) { state.ip = v.ip; state.cidr = v.cidr; }
+      }
+      if (stepParam) {
+        const n = parseInt(stepParam, 10);
+        if (n >= 1 && n <= 8) state.passo = n;
+      }
+    } catch (_) {}
+  }
+  function reset() { state = { ...DEFAULT }; listeners.forEach((fn) => fn(state)); syncUrl(); }
+  return { get, set, subscribe, fromUrl, reset };
+})();
+
+/* ============================================================
+   MÓDULO 3 — NOTICES
+   ============================================================ */
+const Notices = (() => {
+  function build(state, data) {
+    const items = [];
+    const cls = Subnet.classifyIp(state.ip, state.cidr);
+
+    if (cls.severity) {
+      items.push({
+        severity: cls.severity, tag: cls.name,
+        text: `${cls.desc}${cls.rfc ? ` (${cls.rfc})` : ''}`,
+      });
+    }
+
+    // Correção #1: evita duplicata "Rota padrão" quando classify já cobriu
+    if (state.cidr === 0 && cls.name !== 'Rota padrão') {
+      items.push({ severity: 'warning', tag: 'Rota padrão', text: 'Máscara /0 abrange todo o espaço IPv4 — uso típico: default route' });
+    } else if (state.cidr > 0 && state.cidr < 8) {
+      items.push({ severity: 'warning', tag: 'Supernet', text: `Máscara /${state.cidr} — agregação de rotas (BGP/OSPF)` });
+    } else if (state.cidr === 31) {
+      items.push({ severity: 'warning', tag: 'P2P', text: 'Máscara /31 — link ponto-a-ponto (RFC 3021)' });
+    } else if (state.cidr === 32) {
+      items.push({ severity: 'warning', tag: 'Host único', text: 'Máscara /32 — o endereço é o próprio host' });
+    }
+
+    if (state.cidr < 31 && data) {
+      if (data.ipEhRede) items.push({ severity: 'warning', tag: 'Endereço de rede', text: `${state.ip} identifica a sub-rede — não atribuível a hosts` });
+      if (data.ipEhBroadcast) items.push({ severity: 'warning', tag: 'Broadcast', text: `${state.ip} é o broadcast — não atribuível a hosts` });
+    }
+
+    if (!items.length) return null;
+    const rank = { error: 3, warning: 2, info: 1 };
+    const top = items.reduce((a, b) => (rank[a.severity] >= rank[b.severity] ? a : b));
+    return { severity: top.severity, items };
+  }
+  return { build };
+})();
+
+/* ============================================================
+   MÓDULO 4 — RENDER
+   ============================================================ */
+const Render = (() => {
+  const STEP_TITLES = [
+    'Análise Inicial do Endereço', 'Identificação do Octeto de Interesse',
+    'Decomposição Completa dos 4 Octetos', 'Cálculo dos Bits de Rede e Host',
+    'Determinação do Tamanho do Bloco', 'Encontrando o Endereço de Rede',
+    'Calculando o Endereço de Broadcast', 'Faixa de Hosts Válidos Úteis',
+  ];
+  const TOTAL = STEP_TITLES.length;
+
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const copyBtn = (text) =>
+    `<button type="button" class="copy-btn" data-copy="${esc(text)}" aria-label="Copiar ${esc(text)}">⧉ Copiar</button>`;
+  const explain = (t1, b1, t2, b2) => `
+    <div class="explain-grid">
+      <div class="explain-card"><span class="explain-title">${esc(t1)}:</span> ${b1}</div>
+      <div class="explain-card"><span class="explain-title">${esc(t2)}:</span> ${b2}</div>
+    </div>`;
+  const heading = (n, text) =>
+    `<h2 class="step-heading"><span class="step-num">Passo ${n}:</span> ${esc(text)}</h2>`;
+
+  function step1(state) {
+    // Correção #8: usa classifyIp para pill contextual (data-class)
+    const cls = Subnet.classifyIp(state.ip, state.cidr);
+    const letter = cls.classe;
+    const displayName = cls.name.replace(/\s*\([A-E]\)$/, '');
+    return `
+      ${heading(1, 'Leitura do Endereço de Destino')}
+      <div class="value-card value-card--primary">
+        <span class="value-label">Endereço IPv4 + prefixo</span>
+        <div class="value-code value-code--ip">${esc(state.ip)}<span style="color:var(--primary)">/${esc(String(state.cidr))}</span>${copyBtn(`${state.ip}/${state.cidr}`)}</div>
+        <div class="class-pill" data-class="${esc(letter)}">
+          Classe ${esc(letter)} · ${esc(displayName)}
+        </div>
+      </div>
+      ${explain(
+        'Identificação de Partes',
+        'O endereço IP divide-se conceitualmente em duas metades: a porção de <strong>Rede</strong> (vizinhança) e a porção de <strong>Host</strong> (equipamento exato).',
+        'Objetivo da Análise',
+        'Extraia esses dois componentes limpos antes de calcular, para não misturar roteamento com contagem de hosts.'
+      )}
+      <div class="explain-card">
+        <span class="explain-title">Classe ${esc(letter)}</span>
+        Faixa histórica: <strong>${esc(cls.range)}</strong>. O primeiro octeto determina a classe do IP (independente da máscara CIDR usada). Classes A, B e C admitem hosts; D é multicast e E é reservado.
+      </div>`;
+  }
+
+  function step2(state, data) {
+    const oct = state.ip.split('.');
+    const isZero = state.cidr === 0;
+    const isLowCidr = state.cidr >= 1 && state.cidr < 8;
+    let descCritico, critLabel, critText, intro;
+    if (isZero) {
+      descCritico = 'A máscara /0 não fixa nenhum bit — <strong>não há octeto crítico</strong>.';
+      critLabel = 'Nenhum octeto é crítico';
+      critText = 'Como a máscara é 0.0.0.0, nenhum octeto tem bits de rede fixos.';
+      intro = 'A máscara <strong style="color:var(--primary);font-family:var(--font-mono)">/0</strong> não fixa nenhum octeto.';
+    } else if (isLowCidr) {
+      descCritico = `A máscara /${state.cidr} fixa apenas <strong>${state.cidr} bit(s)</strong> no primeiro octeto.`;
+      critLabel = 'Octeto Crítico';
+      critText = 'O octeto 1 é onde a transição entre rede e host começa. Os octetos 2, 3 e 4 são integralmente de host (0).';
+      intro = `A máscara <strong style="color:var(--primary);font-family:var(--font-mono)">/${state.cidr}</strong> afeta o <strong style="color:var(--primary);font-family:var(--font-mono)">octeto 1</strong>.`;
+    } else if (data.ehMultiploDe8) {
+      descCritico = 'A máscara alinha em múltiplos de 8: este octeto é integralmente de rede (máscara 255).';
+      critLabel = 'Octeto Crítico';
+      critText = 'Octetos anteriores contêm apenas bits de rede (255). Posteriores, apenas bits de host (0).';
+      intro = `A máscara <strong style="color:var(--primary);font-family:var(--font-mono)">/${state.cidr}</strong> afeta o <strong style="color:var(--primary);font-family:var(--font-mono)">octeto ${data.octetoAfetadoIdx + 1}</strong>.`;
+    } else {
+      descCritico = 'É o octeto onde a transição de bits de rede (1s) para bits de host (0s) acontece.';
+      critLabel = 'Octeto Crítico';
+      critText = 'Octetos anteriores contêm apenas bits de rede (255). Posteriores, apenas bits de host (0).';
+      intro = `A máscara <strong style="color:var(--primary);font-family:var(--font-mono)">/${state.cidr}</strong> afeta o <strong style="color:var(--primary);font-family:var(--font-mono)">octeto ${data.octetoAfetadoIdx + 1}</strong>.`;
+    }
+    return `
+      ${heading(2, 'Localização do Octeto Crítico')}
+      <p style="text-align:center;color:var(--text-muted)">${intro}</p>
+      <div class="octet-row">
+        ${oct.map((o, i) => `
+          <div class="octet ${i === data.octetoAfetadoIdx && !isZero ? 'is-active' : ''}">
+            <span class="octet-label">Octeto ${i + 1}</span>
+            <span class="octet-value">${esc(o)}</span>
+          </div>`).join('')}
+      </div>
+      ${explain(critLabel, descCritico, 'Octetos Estáveis', critText)}`;
+  }
+
+  function step3(state, data) {
+    const weights = [128, 64, 32, 16, 8, 4, 2, 1];
+    return `
+      ${heading(3, 'Decomposição Linear dos Octetos')}
+      <div class="octet-cards">
+        ${state.ip.split('.').map((o, i) => {
+          const bin = parseInt(o, 10).toString(2).padStart(8, '0');
+          return `
+            <div class="bin-card ${i === data.octetoAfetadoIdx && state.cidr !== 0 ? 'is-active' : ''}">
+              <div class="bin-label">Octeto ${i + 1}</div>
+              <div class="bin-weights">${weights.map((w) => `<span>${w}</span>`).join('')}</div>
+              <div class="bin-decimal">${esc(o)}</div>
+              <div class="bin-bits">${bin.split('').map((b) => `<span>${b}</span>`).join('')}</div>
+            </div>`;
+        }).join('')}
+      </div>
+      ${explain('Conversão Binária',
+        'Cada octeto decimal representa 8 posições binárias com pesos 128, 64, 32, 16, 8, 4, 2, 1.',
+        'Visão de Roteador',
+        'Equipamentos processam apenas correntes ligadas (1) e desligadas (0).')}`;
+  }
+
+  function step4(state) {
+    return `
+      ${heading(4, 'Divisão dos Bits (Rede vs. Host)')}
+      <div class="bits-grid">
+        <div class="bits-card bits-card--network">
+          <span class="value-label">Bits de Rede (1s)</span>
+          <div class="bits-number bits-number--network">${state.cidr}</div>
+          <span class="bits-caption">Prefixo fixo da sub-rede</span>
+        </div>
+        <div class="bits-card bits-card--host">
+          <span class="value-label">Bits de Host (0s)</span>
+          <div class="bits-number bits-number--host">${32 - state.cidr}</div>
+          <span class="bits-caption">Endereços flexíveis</span>
+        </div>
+      </div>
+      ${explain('Fórmula do CIDR',
+        'O número após a barra indica quantos bits da esquerda para a direita pertencem à rede.',
+        'Cálculo da Folha',
+        'IPv4 tem 32 bits. Portanto: Bits de Host = 32 − Máscara CIDR.')}`;
+  }
+
+  function step5(state, data) {
+    const isZero = state.cidr === 0;
+    const formulaBlock = isZero
+      ? `<div class="formula-main">Máscara <span class="highlight">0.0.0.0</span> — bloco de 2<sup>32</sup> endereços</div>
+         <div class="formula-sub">Toda a Internet IPv4 é uma única "sub-rede" /0.</div>`
+      : `<div class="formula-main">256 − ${data.maskOctetoValue} = <span class="highlight">${data.tamanhoBloco}</span></div>
+         <div class="formula-sub">Ou em potências: 2<sup>(8 − ${data.bitsNoOcteto})</sup> = ${data.tamanhoBloco}</div>`;
+    return `
+      ${heading(5, 'O Número Mágico (Tamanho do Bloco)')}
+      <div class="formula">${formulaBlock}</div>
+      ${explain('Significado do Bloco',
+        'É o salto entre sub-redes dentro do octeto afetado.',
+        'Regra dos 256',
+        'Um octeto tem 256 valores (0–255). Subtrair o valor parcial da máscara dá o salto.')}`;
+  }
+
+  function step6(state, data) {
+    return `
+      ${heading(6, 'Identificação do Endereço de Rede')}
+      <div class="value-card value-card--network">
+        <span class="value-label">ID da Sub-rede</span>
+        <div class="value-code value-code--network">${esc(data.ipRede)}${copyBtn(data.ipRede)}</div>
+      </div>
+      <div class="octet-row">
+        ${data.ipRede.split('.').map((o, i) => `
+          <div class="octet ${i === data.octetoAfetadoIdx && state.cidr !== 0 ? 'is-active' : ''}">
+            <span class="octet-label">Oct. ${i + 1}</span>
+            <span class="octet-value" style="${i === data.octetoAfetadoIdx && state.cidr !== 0 ? 'color:var(--primary)' : ''}">${esc(o)}</span>
+          </div>`).join('')}
+      </div>
+      ${explain('Operação AND',
+        'O endereço de rede surge alinhando IP e máscara.',
+        'Uso Obrigatório',
+        'IP de rede não pode ser atribuído a placas. Serve para rotas.')}`;
+  }
+
+  function step7(state, data) {
+    return `
+      ${heading(7, 'Identificação do Endereço de Broadcast')}
+      <div class="value-card value-card--broadcast">
+        <span class="value-label">Broadcast da Sub-rede</span>
+        <div class="value-code value-code--broadcast">${esc(data.ipBroadcast)}${copyBtn(data.ipBroadcast)}</div>
+      </div>
+      <div class="octet-row">
+        ${data.ipBroadcast.split('.').map((o, i) => `
+          <div class="octet ${i === data.octetoAfetadoIdx && state.cidr !== 0 ? 'is-active' : ''}">
+            <span class="octet-label">Oct. ${i + 1}</span>
+            <span class="octet-value" style="${i === data.octetoAfetadoIdx && state.cidr !== 0 ? 'color:var(--broadcast)' : ''}">${esc(o)}</span>
+          </div>`).join('')}
+      </div>
+      ${explain('Cálculo Rápido',
+        'Broadcast = (endereço da próxima rede) − 1.',
+        'Função Especial',
+        'Pacotes para o IP de broadcast são entregues a todas as máquinas da sub-rede.')}`;
+  }
+
+  function step8(state, data) {
+    // Correção #2 e #10: terminologia e regra condicional
+    const isP2P = state.cidr === 31;
+    const isHostOnly = state.cidr === 32;
+    const isZero = state.cidr === 0;
+
+    const rangeLabel = isP2P ? 'Endereços do link P2P' : isHostOnly ? 'Endereço único' : 'Faixa Atribuível';
+    const firstLabel = isP2P ? 'Endpoint A' : 'Primeiro Host';
+    const lastLabel  = isP2P ? 'Endpoint B' : 'Último Host';
+
+    const regraTitulo = isP2P ? 'RFC 3021 (P2P)'
+      : isHostOnly ? 'Host único'
+      : 'Regra do Subtrair 2';
+    const regraTexto = isP2P
+      ? 'Em /31 <strong>ambos</strong> endereços são hosts válidos (link ponto-a-ponto). Não se subtrai 2.'
+      : isHostOnly
+        ? 'Em /32 existe apenas <strong>1 endereço</strong>, que é o próprio host. Não se subtrai 2.'
+        : 'Subtraímos 2 porque o primeiro é a Rede e o último é o Broadcast.';
+
+    const capacityText = isP2P
+      ? `<strong>${data.totalHosts}</strong> endereço(s) — ambos atribuíveis (RFC 3021)`
+      : isHostOnly
+        ? `<strong>1</strong> endereço — o próprio host`
+        : `<strong>${data.totalHosts.toLocaleString('pt-BR')}</strong> dispositivo(s)`;
+
+    const zeroWarning = isZero ? `
+      <div class="explain-card" style="border-color:var(--warning);">
+        <span class="explain-title" style="color:var(--warning);">⚠ "Primeiro host" de /0</span>
+        O endereço <strong>${esc(data.primeiroHost)}</strong> cai em 0.0.0.0/8 — reservado como "esta rede" (RFC 1122). Na prática, IPs desta faixa não são atribuíveis.
+      </div>` : '';
+
+    const summaryText =
+      `Rede:       ${data.ipRede}/${state.cidr}\n` +
+      `Máscara:    ${data.mascaraStr}\n` +
+      `Broadcast:  ${data.ipBroadcast}\n` +
+      `Hosts:      ${data.primeiroHost} – ${data.ultimoHost}\n` +
+      `Capacidade: ${data.totalHosts.toLocaleString('pt-BR')} dispositivo(s)`;
+
+    return `
+      ${heading(8, 'Intervalo de Hosts Úteis (Usáveis)')}
+      <div class="value-card value-card--primary">
+        <span class="value-label">${rangeLabel}</span>
+        <div class="host-range">
+          <div class="host-box"><div class="host-label">${firstLabel}</div><div class="host-value host-value--first">${esc(data.primeiroHost)}</div></div>
+          <div class="host-range-sep">→</div>
+          <div class="host-box"><div class="host-label">${lastLabel}</div><div class="host-value host-value--last">${esc(data.ultimoHost)}</div></div>
+        </div>
+        <div class="capacity">Capacidade Total: ${capacityText}</div>
+      </div>
+      ${zeroWarning}
+      ${explain(regraTitulo, regraTexto,
+        'Alocação Prática',
+        isP2P ? 'Use um endereço em cada extremidade do link ponto-a-ponto.'
+        : isHostOnly ? 'Use em rotas estáticas, loopbacks ou endereços virtuais.'
+        : 'Roteadores, PCs, impressoras e switches recebem IPs dentro desta faixa.')}
+      <div class="summary">
+        <div class="summary-title">
+          <span>Resumo da Sub-rede</span>
+          <button type="button" class="copy-btn" data-copy="${esc(summaryText)}" aria-label="Copiar resumo">⧉ Copiar tudo</button>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-row"><span class="summary-key">Rede</span><span class="summary-val">${esc(data.ipRede)}/${esc(String(state.cidr))}</span></div>
+          <div class="summary-row"><span class="summary-key">Máscara</span><span class="summary-val">${esc(data.mascaraStr)}</span></div>
+          <div class="summary-row"><span class="summary-key">Broadcast</span><span class="summary-val">${esc(data.ipBroadcast)}</span></div>
+          <div class="summary-row"><span class="summary-key">Hosts</span><span class="summary-val">${esc(data.primeiroHost)} – ${esc(data.ultimoHost)}</span></div>
+        </div>
+      </div>
+      <details class="challenge">
+        <summary>🎯 Desafio: preciso acomodar 100 dispositivos. Qual a menor máscara?</summary>
+        <div class="challenge-answer">
+          <p><strong>/25</strong> — fornece <strong>126</strong> hosts usáveis (2<sup>7</sup> − 2).</p>
+          <p style="margin-top:6px;color:var(--text-muted);font-size:0.85rem">Com /26 só sobrariam 62 hosts — insuficiente.</p>
+        </div>
+      </details>`;
+  }
+
+  function renderStep(state, data) {
+    switch (state.passo) {
+      case 1: return step1(state);
+      case 2: return step2(state, data);
+      case 3: return step3(state, data);
+      case 4: return step4(state);
+      case 5: return step5(state, data);
+      case 6: return step6(state, data);
+      case 7: return step7(state, data);
+      case 8: return step8(state, data);
+      default: return '';
+    }
+  }
+
+  function renderStepper(state) {
+    document.getElementById('stepper').innerHTML = STEP_TITLES.map((title, i) => {
+      const n = i + 1;
+      const cls = n === state.passo ? 'active' : n < state.passo ? 'done' : '';
+      const cur = n === state.passo ? ' aria-current="step"' : '';
+      return `<li style="flex:1;display:flex;"><button type="button" class="step-dot ${cls}" data-step="${n}"${cur} aria-label="Ir para o passo ${n}: ${esc(title)}" data-num="${n}"></button></li>`;
+    }).join('');
+  }
+
+  function renderNotice(state, data) {
+    const el = document.getElementById('notice');
+    const icon = document.getElementById('notice-icon');
+    const body = document.getElementById('notice-body');
+    const notice = Notices.build(state, data);
+    if (!notice) { el.hidden = true; return; }
+    el.hidden = false;
+    el.className = `notice notice--${notice.severity}`;
+    icon.textContent = notice.severity === 'error' ? '⛔' : notice.severity === 'warning' ? '⚠' : 'ℹ';
+    // Correção #3: cada tag carrega sua própria severidade via data-severity
+    body.innerHTML = notice.items.map((it) => `
+      <div class="notice-line">
+        <span class="notice-tag" data-severity="${esc(it.severity)}">${esc(it.tag)}</span>
+        <span>${esc(it.text)}</span>
+      </div>`).join('');
+  }
+
+  function render(state) {
+    const data = Subnet.calculate(state.ip, state.cidr);
+    renderStepper(state);
+    document.getElementById('step-counter').textContent = `Passo ${state.passo} de ${TOTAL}`;
+    document.getElementById('step-title').textContent = STEP_TITLES[state.passo - 1];
+    document.getElementById('progress-fill').style.width = `${(state.passo / TOTAL) * 100}%`;
+    document.getElementById('btn-prev').disabled = state.passo === 1;
+    document.getElementById('btn-next').disabled = state.passo === TOTAL;
+    renderNotice(state, data);
+    document.getElementById('step-content').innerHTML = renderStep(state, data);
+  }
+
+  return { render, TOTAL, STEP_TITLES };
+})();
+
+/* ============================================================
+   MÓDULO 5 — UI HELPERS
+   ============================================================ */
+const UI = (() => {
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch {}
+      ta.remove(); return true;
+    }
+  }
+  let toastTimer;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    const msgEl = document.getElementById('toast-msg');
+    if (msgEl) msgEl.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    // Correção #6: 3.5s em vez de 1.8s
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+  }
+  function dismissToast() {
+    document.getElementById('toast').classList.remove('show');
+    clearTimeout(toastTimer);
+  }
+  return { copyText, toast, dismissToast };
+})();
+
+/* ============================================================
+   MÓDULO 6 — WIRING
+   ============================================================ */
+function init() {
+  const input = document.getElementById('input-ip');
+  const errorEl = document.getElementById('input-error');
+  const hintEl = document.getElementById('input-hint');
+  const overrideBtn = document.getElementById('btn-override');
+  const form = document.getElementById('calc-form');
+  const wrapper = document.getElementById('input-wrapper');
+
+  State.fromUrl();
+  input.value = `${State.get().ip}/${State.get().cidr}`;
+  State.subscribe(Render.render);
+  Render.render(State.get());
+
+  function updateClearVisibility() {
+    wrapper.classList.toggle('has-value', input.value.length > 0);
+  }
+  updateClearVisibility();
+
+  function showError(msg, hint = null, showOverride = false) {
+    errorEl.textContent = msg;
+    if (hint) { hintEl.textContent = hint; hintEl.hidden = false; }
+    else { hintEl.hidden = true; hintEl.textContent = ''; }
+    overrideBtn.hidden = !showOverride;
+    if (showOverride) overrideBtn.textContent = '⚡ Calcular mesmo assim';
+    input.classList.add('invalid');
+    input.classList.remove('warned');
+    // Correção #4: aria-invalid para leitores de tela
+    input.setAttribute('aria-invalid', 'true');
+  }
+
+  function clearError() {
+    errorEl.textContent = '';
+    hintEl.hidden = true;
+    hintEl.textContent = '';
+    overrideBtn.hidden = true;
+    input.classList.remove('invalid');
+    input.classList.remove('warned');
+    input.setAttribute('aria-invalid', 'false');
+  }
+
+  function validateAndSubmit(force = false) {
+    clearError();
+    const v = Subnet.validate(input.value, force);
+    if (!v.ok) {
+      showError(v.error, v.hint, v.blocked && !force);
+      return false;
+    }
+    const prev = State.get();
+    const isNew = prev.ip !== v.ip || prev.cidr !== v.cidr;
+    State.set({ ip: v.ip, cidr: v.cidr, passo: 1 });
+    input.value = `${v.ip}/${v.cidr}`;
+    updateClearVisibility();
+
+    if (v.classification.severity === 'warning' || v.classification.severity === 'error') {
+      input.classList.add('warned');
+    }
+
+    if (isNew) UI.toast(`✓ Calculado: ${v.ip}/${v.cidr}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return true;
+  }
+
+  form.addEventListener('submit', (e) => { e.preventDefault(); validateAndSubmit(); });
+
+  input.addEventListener('input', () => {
+    updateClearVisibility();
+    const v = Subnet.validate(input.value, true);
+    if (v.ok || input.value.trim() === '') clearError();
+  });
+
+  input.addEventListener('blur', () => {
+    if (input.value.trim() === '') return;
+    const v = Subnet.validate(input.value);
+    if (!v.ok) showError(v.error, v.hint, v.blocked);
+  });
+
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    input.value = ''; clearError(); updateClearVisibility(); input.focus();
+  });
+
+  overrideBtn.addEventListener('click', () => validateAndSubmit(true));
+
+  document.querySelectorAll('.example').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      input.value = btn.dataset.example;
+      updateClearVisibility();
+      validateAndSubmit();
+    });
+  });
+
+  document.querySelectorAll('.preset').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const candidateIp = (input.value.split('/')[0] || '').trim().replace(/\s+/g, '');
+      const v = Subnet.validate(`${candidateIp}/24`, true);
+      const ipToUse = v.ok ? candidateIp : State.get().ip;
+      input.value = `${ipToUse}/${btn.dataset.preset}`;
+      updateClearVisibility();
+      validateAndSubmit();
+    });
+  });
+
+  document.getElementById('btn-prev').addEventListener('click', () => {
+    const { passo } = State.get();
+    if (passo > 1) { State.set({ passo: passo - 1 }); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  });
+  document.getElementById('btn-next').addEventListener('click', () => {
+    const { passo } = State.get();
+    if (passo < Render.TOTAL) { State.set({ passo: passo + 1 }); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  });
+  document.getElementById('btn-restart').addEventListener('click', () => {
+    State.reset();
+    input.value = `${State.get().ip}/${State.get().cidr}`;
+    clearError(); updateClearVisibility();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  document.getElementById('stepper').addEventListener('click', (e) => {
+    const btn = e.target.closest('.step-dot');
+    if (!btn) return;
+    State.set({ passo: parseInt(btn.dataset.step, 10) });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-copy]');
+    if (!btn) return;
+    const ok = await UI.copyText(btn.dataset.copy);
+    UI.toast(ok ? '✓ Copiado' : 'Erro ao copiar');
+  });
+
+  // Correção #6: botão de fechar toast
+  document.getElementById('toast-close').addEventListener('click', UI.dismissToast);
+
+  window.addEventListener('popstate', () => {
+    State.fromUrl();
+    const s = State.get();
+    input.value = `${s.ip}/${s.cidr}`;
+    updateClearVisibility();
+    Render.render(s);
+  });
+}
+
+init();
+
+/* ============================================================
+   MÓDULO 7 — TESTES (?test)
+   ============================================================ */
+function runTests() {
+  const valCases = [
+    ['10.0.0.5/24', true, null],
+    ['8.8.8.8/32', true, null],
+    ['127.0.0.1/8', true, null],
+    ['169.254.1.1/16', true, null],
+    ['192.168.1.1/24', true, null],
+    ['10.0.0.5', false, 'Falta a máscara CIDR'],
+    ['999.1.1.1/24', false, 'Octeto 1 inválido'],
+    ['10.0.0.5/33', false, 'Máscara /33 inválida'],
+    ['', false, 'Digite um endereço'],
+    ['224.0.0.1/4', false, 'não pode ser host'],
+    ['239.255.255.255/4', false, 'não pode ser host'],
+    ['240.0.0.1/4', false, 'não pode ser host'],
+    ['255.255.255.255/32', false, 'não pode ser host'],
+    ['0.0.0.1/8', false, 'não pode ser host'],
+  ];
+
+  const classCases = [
+    ['8.8.8.8', 'A'], ['10.0.0.5', 'A'], ['127.0.0.1', 'L'],
+    ['172.16.0.1', 'B'], ['169.254.1.1', 'B'],
+    ['192.168.1.1', 'C'], ['224.0.0.1', 'D'], ['240.0.0.1', 'E'],
+  ];
+
+  const overrideCases = ['224.0.0.1/4', '240.0.0.1/4', '0.0.0.1/8', '255.255.255.255/32'];
+
+  let pass = 0, fail = 0;
+  const fail_ = (msg, extra) => { fail++; console.error(`FAIL: ${msg}`, extra || ''); };
+
+  for (const [input, expected, errSubstr] of valCases) {
+    const v = Subnet.validate(input);
+    if (v.ok !== expected) { fail_(`validate('${input}') ok`, { esperado: expected, obtido: v.ok }); continue; }
+    if (!expected && errSubstr && v.error && !v.error.toLowerCase().includes(errSubstr.toLowerCase())) {
+      fail_(`validate('${input}') error`, { esperadoContem: errSubstr, obtido: v.error });
+      continue;
+    }
+    pass++;
+  }
+
+  for (const [ip, expectedClass] of classCases) {
+    const cls = Subnet.getClass(ip);
+    if (cls.letter === expectedClass) pass++;
+    else fail_(`getClass('${ip}')`, { esperado: expectedClass, obtido: cls.letter });
+  }
+
+  for (const input of overrideCases) {
+    const normal = Subnet.validate(input);
+    const forced = Subnet.validate(input, true);
+    if (!normal.ok && normal.blocked && forced.ok) pass++;
+    else fail_(`override('${input}')`, { normal: normal.ok, blocked: normal.blocked, forced: forced.ok });
+  }
+
+  // Correção #1: sem duplicata de "Rota padrão" em 0.0.0.0/0
+  {
+    const n = Notices.build({ ip: '0.0.0.0', cidr: 0 }, Subnet.calculate('0.0.0.0', 0));
+    const dups = n ? n.items.filter(i => i.tag === 'Rota padrão').length : 0;
+    if (dups === 1) pass++;
+    else fail_('Notices.build 0.0.0.0/0 sem duplicata de "Rota padrão"', { obtido: dups });
+  }
+
+  // Correção #2/#10: /31 e /32 têm totalHosts corretos
+  {
+    const d31 = Subnet.calculate('10.0.0.4', 31);
+    if (d31.totalHosts === 2 && d31.primeiroHost === '10.0.0.4' && d31.ultimoHost === '10.0.0.5') pass++;
+    else fail_('/31 ambos hosts válidos', { obtido: d31 });
+
+    const d32 = Subnet.calculate('10.0.0.5', 32);
+    if (d32.totalHosts === 1 && d32.primeiroHost === d32.ultimoHost) pass++;
+    else fail_('/32 host único', { obtido: d32 });
+  }
+
+  console.log(`%c✓ ${pass} passaram · ${fail} falharam`, `color:${fail ? '#f85149' : '#3fb950'};font-weight:bold;font-size:14px`);
+}
+if (location.search.includes('test')) runTests();
+</script>
 </body>
 </html>
